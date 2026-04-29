@@ -1,40 +1,40 @@
 import React, { useEffect, useState } from "react";
-import {Link,useNavigate} from 'react-router-dom'
-import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
-import {faAngleRight, faUserPen} from '@fortawesome/free-solid-svg-icons'
-import S from './style';
-import {useDispatch, useSelector} from 'react-redux'
-import { setUserLogout } from '../../modules/logIn';
+import { Link, useNavigate } from "react-router-dom";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faAngleRight, faUserPen } from "@fortawesome/free-solid-svg-icons";
+import S from "./style";
+import { useDispatch, useSelector } from "react-redux";
+import { setUserLogout } from "../../feature/login/logIn";
 import { API_URL } from "../../api/Api";
 
 const MyPageMain = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
-    
+
     const isLogin = useSelector((state) => state.login.isLogin);
-    const currentUser = useSelector((state)=>state.login.currentUser);
-    
+    const currentUser = useSelector((state) => state.login.currentUser);
+
     const [nickname, setNickname] = useState(null);
     const [statusMessage, setStatusMessage] = useState(null);
     const [profileImg, setProfileImg] = useState("");
     const [calendarData, setCalendarData] = useState([]);
-    const [number1,setNumber1]=useState(0);
+    const [number1, setNumber1] = useState(0);
 
     const logoutApi = async () => {
         try {
             const response = await fetch(`${API_URL}/user/logout`, {
-                method: 'POST',
+                method: "POST",
             });
 
             if (!response.ok) {
-                throw new Error('로그아웃 실패');
+                throw new Error("로그아웃 실패");
             }
-    
-            clearSession(); 
-            console.log('로그아웃 성공');
+
+            clearSession();
+            console.log("로그아웃 성공");
             // 세션 관련 정보를 클리어하는 함수 호출
         } catch (error) {
-            console.error('로그아웃 오류:', error);
+            console.error("로그아웃 오류:", error);
         }
     };
 
@@ -42,7 +42,9 @@ const MyPageMain = () => {
         const fetchUserProfileImage = async () => {
             if (currentUser && currentUser.email) {
                 try {
-                    const response = await fetch(`${API_URL}/user/getProfile/${currentUser.email}`);
+                    const response = await fetch(
+                        `${API_URL}/user/getProfile/${currentUser.email}`,
+                    );
                     const data = await response.json();
                     setProfileImg(data.profileImg);
                 } catch (error) {
@@ -60,39 +62,39 @@ const MyPageMain = () => {
     useEffect(() => {
         //마음일지 데이터 가져오기
         const fetchData = async () => {
-          
             try {
-                const token = localStorage.getItem('token');
-                const response = await fetch(`${API_URL}/myMind/getCalendar`,{
-                  method: 'GET',
-                  headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
-                  },
+                const token = localStorage.getItem("token");
+                const response = await fetch(`${API_URL}/myMind/getCalendar`, {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${token}`,
+                    },
                 });
                 if (!response.ok) {
-                    throw new Error('데이터를 불러오는 데 실패했습니다.');
+                    throw new Error("데이터를 불러오는 데 실패했습니다.");
                 }
                 const datas = await response.json();
                 // console.log(datas);
-                // setCalendarData(datas); 
+                // setCalendarData(datas);
                 // console.log(calendarData);
                 // console.log(datas.length);
                 // return datas.length;
                 setNumber1(datas.length);
             } catch (error) {
-                console.error('데이터를 불러오는 중 에러 발생:', error);
+                console.error("데이터를 불러오는 중 에러 발생:", error);
             }
-        }
+        };
         fetchData();
-        // setNumber1(fetchData()); 
-      }, [currentUser]);
-      
-      console.log(number1);
+        // setNumber1(fetchData());
+    }, [currentUser]);
+
+    console.log(number1);
 
     const clearSession = () => {
         // 쿠키 클리어
-        document.cookie = "connect.sid=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+        document.cookie =
+            "connect.sid=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
         // 기타 로컬 스토리지 등의 클리어 로직 추가 가능
     };
 
@@ -102,22 +104,21 @@ const MyPageMain = () => {
             dispatch(setUserLogout(null, false));
             navigate("/logIn"); // 로그인 페이지로 리디렉션
         } catch (error) {
-            console.error('Failed to handle logout:', error.message);
+            console.error("Failed to handle logout:", error.message);
         }
     };
-
 
     return (
         <>
             <S.MypageNav>
-                <Link to={'/myPage/edit'}>
-                    <FontAwesomeIcon icon={faUserPen} /> 
+                <Link to={"/myPage/edit"}>
+                    <FontAwesomeIcon icon={faUserPen} />
                 </Link>
             </S.MypageNav>
             <S.ProfileContaier>
                 <S.ProfilePictureWrapper>
                     <div className="pictureBox">
-                        <img src={profileImg} style={{width:100}}/>
+                        <img src={profileImg} style={{ width: 100 }} />
                     </div>
                 </S.ProfilePictureWrapper>
                 <S.ProfileNameWrapper>
@@ -136,21 +137,21 @@ const MyPageMain = () => {
                     </div>
                     <div className="sharedMytodayBox">
                         <p>공유된 나의 마음</p>
-                        <Link to={'/myMind'}>
+                        <Link to={"/myMind"}>
                             <h3>1개</h3>
                         </Link>
                     </div>
-                </S.ProfileContentsWrapper>   
+                </S.ProfileContentsWrapper>
             </S.ProfileContaier>
             <S.ServiceContainer>
                 <S.ServiceWrapper>
-                    <Link to={'/myPage/termsOfUse'}>
+                    <Link to={"/myPage/termsOfUse"}>
                         <p>서비스 이용약관</p>
                         <FontAwesomeIcon icon={faAngleRight} />
                     </Link>
                 </S.ServiceWrapper>
                 <S.ServiceWrapper>
-                    <Link to={'/myPage/privacyPolicy'}>
+                    <Link to={"/myPage/privacyPolicy"}>
                         <p>개인정보 처리 방침</p>
                         <FontAwesomeIcon icon={faAngleRight} />
                     </Link>
@@ -162,13 +163,12 @@ const MyPageMain = () => {
                     </button>
                 </S.ServiceWrapper>
                 <S.ServiceWrapper>
-                    <Link to={'/myPage/secession'}>
+                    <Link to={"/myPage/secession"}>
                         <p className="secession">회원탈퇴</p>
                         <FontAwesomeIcon icon={faAngleRight} />
                     </Link>
                 </S.ServiceWrapper>
             </S.ServiceContainer>
-
         </>
     );
 };

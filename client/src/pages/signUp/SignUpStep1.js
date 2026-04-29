@@ -5,7 +5,7 @@ import Input from "../../components/input/style";
 import OneulButton from "../../components/button/OneulButton";
 import useInput from "../../hooks/useInput";
 import { useDispatch, useSelector } from "react-redux";
-import { updateSignUpData, resetSignUpData } from "../../modules/signUp";
+import { updateSignUpData, resetSignUpData } from "../../feature/signup/signUp";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeft, faCircleXmark } from "@fortawesome/free-solid-svg-icons";
 import { API_URL } from "../../api/Api";
@@ -15,15 +15,21 @@ const SignUpStep1 = () => {
     const dispatch = useDispatch();
     const signUpData = useSelector((state) => state.signup);
 
-    const [email, setEmail, handleEmailChange] = useInput(signUpData.email || "");
-    const [password, setPassword, handlePasswordChange] = useInput(signUpData.password || "");
-    const [passwordCheck, setPasswordCheck, handlePasswordCheckChange] = useInput("");
+    const [email, setEmail, handleEmailChange] = useInput(
+        signUpData.email || "",
+    );
+    const [password, setPassword, handlePasswordChange] = useInput(
+        signUpData.password || "",
+    );
+    const [passwordCheck, setPasswordCheck, handlePasswordCheckChange] =
+        useInput("");
 
     const [emailError, setEmailError] = useState("");
     const [passwordError, setPasswordError] = useState("");
     const [passwordCheckError, setPasswordCheckError] = useState("");
 
-    const emailRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+    const emailRegex =
+        /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
     const passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[!@#])[\da-zA-Z!@#]{8,}$/;
 
     useEffect(() => {
@@ -124,11 +130,18 @@ const SignUpStep1 = () => {
         <S.Background>
             <S.Wrapper>
                 <S.BackWrapper>
-                    <FontAwesomeIcon icon={faArrowLeft} className="icon" onClick={handleOnClickBack} />
+                    <FontAwesomeIcon
+                        icon={faArrowLeft}
+                        className="icon"
+                        onClick={handleOnClickBack}
+                    />
                 </S.BackWrapper>
                 <S.LogoWrapper>
                     <Link to={"/logIn"} onClick={handleOnClickLogin}>
-                        <img src={`${process.env.PUBLIC_URL}/global/images/logo.png`} alt="logo" />
+                        <img
+                            src={`${process.env.PUBLIC_URL}/global/images/logo.png`}
+                            alt="logo"
+                        />
                     </Link>
                 </S.LogoWrapper>
                 <S.ContentContainer>
@@ -145,19 +158,28 @@ const SignUpStep1 = () => {
                         <S.ConfirmMessageWrapper>
                             {emailError === "pattern" && (
                                 <S.ConfirmMessage>
-                                    <FontAwesomeIcon icon={faCircleXmark} className="icon" />
+                                    <FontAwesomeIcon
+                                        icon={faCircleXmark}
+                                        className="icon"
+                                    />
                                     이메일 양식에 맞게 입력해주세요.
                                 </S.ConfirmMessage>
                             )}
                             {emailError === "duplicate" && (
                                 <S.ConfirmMessage>
-                                    <FontAwesomeIcon icon={faCircleXmark} className="icon" />
+                                    <FontAwesomeIcon
+                                        icon={faCircleXmark}
+                                        className="icon"
+                                    />
                                     이메일이 이미 사용 중입니다.
                                 </S.ConfirmMessage>
                             )}
                             {emailError === "required" && (
                                 <S.ConfirmMessage>
-                                    <FontAwesomeIcon icon={faCircleXmark} className="icon" />
+                                    <FontAwesomeIcon
+                                        icon={faCircleXmark}
+                                        className="icon"
+                                    />
                                     이메일을 입력해주세요.
                                 </S.ConfirmMessage>
                             )}
@@ -177,13 +199,20 @@ const SignUpStep1 = () => {
                         <S.ConfirmMessageWrapper>
                             {passwordError === "pattern" && (
                                 <S.ConfirmMessage>
-                                    <FontAwesomeIcon icon={faCircleXmark} className="icon" />
-                                    최소 8자, 하나의 숫자와 특수문자가 필요합니다.
+                                    <FontAwesomeIcon
+                                        icon={faCircleXmark}
+                                        className="icon"
+                                    />
+                                    최소 8자, 하나의 숫자와 특수문자가
+                                    필요합니다.
                                 </S.ConfirmMessage>
                             )}
                             {passwordError === "required" && (
                                 <S.ConfirmMessage>
-                                    <FontAwesomeIcon icon={faCircleXmark} className="icon" />
+                                    <FontAwesomeIcon
+                                        icon={faCircleXmark}
+                                        className="icon"
+                                    />
                                     비밀번호를 입력해주세요.
                                 </S.ConfirmMessage>
                             )}
@@ -203,13 +232,19 @@ const SignUpStep1 = () => {
                         <S.ConfirmMessageWrapper>
                             {passwordCheckError === "mismatch" && (
                                 <S.ConfirmMessage>
-                                    <FontAwesomeIcon icon={faCircleXmark} className="icon" />
+                                    <FontAwesomeIcon
+                                        icon={faCircleXmark}
+                                        className="icon"
+                                    />
                                     비밀번호가 일치하지 않습니다.
                                 </S.ConfirmMessage>
                             )}
                             {passwordCheckError === "required" && (
                                 <S.ConfirmMessage>
-                                    <FontAwesomeIcon icon={faCircleXmark} className="icon" />
+                                    <FontAwesomeIcon
+                                        icon={faCircleXmark}
+                                        className="icon"
+                                    />
                                     비밀번호 확인을 입력해주세요.
                                 </S.ConfirmMessage>
                             )}
@@ -217,7 +252,13 @@ const SignUpStep1 = () => {
                     </S.Label>
                 </S.ContentContainer>
                 <S.ButtonContainer>
-                    <OneulButton variant={"indigo"} border={"default"} size={"large"} color={"white"} onClick={handleOnClickNext}>
+                    <OneulButton
+                        variant={"indigo"}
+                        border={"default"}
+                        size={"large"}
+                        color={"white"}
+                        onClick={handleOnClickNext}
+                    >
                         다음
                     </OneulButton>
                 </S.ButtonContainer>

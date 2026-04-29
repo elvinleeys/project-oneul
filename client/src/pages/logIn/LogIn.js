@@ -3,7 +3,7 @@ import S from "./style";
 import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
-import { setUser, setUserStatus } from "../../modules/logIn";
+import { setUser, setUserStatus } from "../../feature/login/logIn";
 import Input from "../../components/input/style";
 import OneulButton from "../../components/button/OneulButton";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -32,7 +32,8 @@ const LogIn = () => {
         setError,
     } = useForm({ mode: "onSubmit" });
 
-    const emailRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+    const emailRegex =
+        /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
 
     const onSubmit = async (data) => {
         try {
@@ -85,7 +86,13 @@ const LogIn = () => {
             <S.Wrapper>
                 <S.LogoWrapper>
                     <Link to={"/logIn"}>
-                        <img src={process.env.PUBLIC_URL + "global/images/logo.png"} alt="logo" />
+                        <img
+                            src={
+                                process.env.PUBLIC_URL +
+                                "global/images/logo.png"
+                            }
+                            alt="logo"
+                        />
                     </Link>
                 </S.LogoWrapper>
                 <S.LoginForm onSubmit={handleSubmit(onSubmit)}>
@@ -106,19 +113,28 @@ const LogIn = () => {
                         <S.ConfirmMessageWrapper>
                             {errors?.email?.type === "pattern" && (
                                 <S.ConfirmMessage>
-                                    <FontAwesomeIcon icon={faCircleXmark} className="icon" />
+                                    <FontAwesomeIcon
+                                        icon={faCircleXmark}
+                                        className="icon"
+                                    />
                                     이메일 양식에 맞게 입력해주세요.
                                 </S.ConfirmMessage>
                             )}
                             {errors?.email?.type === "required" && (
                                 <S.ConfirmMessage>
-                                    <FontAwesomeIcon icon={faCircleXmark} className="icon" />
+                                    <FontAwesomeIcon
+                                        icon={faCircleXmark}
+                                        className="icon"
+                                    />
                                     이메일을 입력해주세요.
                                 </S.ConfirmMessage>
                             )}
                             {errors?.email?.type === "mismatch" && (
                                 <S.ConfirmMessage>
-                                    <FontAwesomeIcon icon={faCircleXmark} className="icon" />
+                                    <FontAwesomeIcon
+                                        icon={faCircleXmark}
+                                        className="icon"
+                                    />
                                     이메일 또는 비밀번호가 일치하지 않습니다.
                                 </S.ConfirmMessage>
                             )}
@@ -126,29 +142,51 @@ const LogIn = () => {
                     </S.LoginLabel>
                     <S.LoginLabel htmlFor="password">
                         <p>비밀번호</p>
-                        <Input {...register("password", { required: true })} variant={"active"} size={"default"} type="password" />
+                        <Input
+                            {...register("password", { required: true })}
+                            variant={"active"}
+                            size={"default"}
+                            type="password"
+                        />
                         <S.ConfirmMessageWrapper>
                             {errors?.password?.type === "required" && (
                                 <S.ConfirmMessage>
-                                    <FontAwesomeIcon icon={faCircleXmark} className="icon" />
+                                    <FontAwesomeIcon
+                                        icon={faCircleXmark}
+                                        className="icon"
+                                    />
                                     비밀번호 입력해주세요.
                                 </S.ConfirmMessage>
                             )}
                             {errors?.password?.type === "mismatch" && (
                                 <S.ConfirmMessage>
-                                    <FontAwesomeIcon icon={faCircleXmark} className="icon" />
+                                    <FontAwesomeIcon
+                                        icon={faCircleXmark}
+                                        className="icon"
+                                    />
                                     이메일 또는 비밀번호가 일치하지 않습니다.
                                 </S.ConfirmMessage>
                             )}
                         </S.ConfirmMessageWrapper>
                     </S.LoginLabel>
-                    <OneulButton variant={"skyblue"} border={"default"} size={"large"} color={"white"} disabled={isSubmitting}>
+                    <OneulButton
+                        variant={"skyblue"}
+                        border={"default"}
+                        size={"large"}
+                        color={"white"}
+                        disabled={isSubmitting}
+                    >
                         로그인
                     </OneulButton>
                 </S.LoginForm>
                 <S.ToSignUp>
                     <Link to={"/signUp/1"}>
-                        <OneulButton variant={"indigo"} border={"default"} size={"large"} color={"white"}>
+                        <OneulButton
+                            variant={"indigo"}
+                            border={"default"}
+                            size={"large"}
+                            color={"white"}
+                        >
                             회원가입
                         </OneulButton>
                     </Link>

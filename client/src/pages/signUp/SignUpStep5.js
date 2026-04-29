@@ -3,7 +3,7 @@ import S from "./style";
 import { Link, useNavigate } from "react-router-dom";
 import OneulButton from "../../components/button/OneulButton";
 import { useDispatch, useSelector } from "react-redux";
-import { updateSignUpData, resetSignUpData } from "../../modules/signUp";
+import { updateSignUpData, resetSignUpData } from "../../feature/signup/signUp";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeft, faCircleXmark } from "@fortawesome/free-solid-svg-icons";
 import { API_URL } from "../../api/Api";
@@ -22,7 +22,9 @@ const SignUpStep5 = () => {
     // 체크박스가 눌리지 않고 다음버튼 클릭 시, 하나 이상 입력하라는 경고메세지 출력
     const handleCheckboxChange = (e) => {
         const { value, checked } = e.target;
-        setOrigin((prev) => (checked ? [...prev, value] : prev.filter((item) => item !== value)));
+        setOrigin((prev) =>
+            checked ? [...prev, value] : prev.filter((item) => item !== value),
+        );
     };
 
     // 프로필이미지를 받아 서버에 업로드한 후 경로를 리턴하는 함수
@@ -116,11 +118,18 @@ const SignUpStep5 = () => {
         <S.Background>
             <S.Wrapper>
                 <S.BackWrapper>
-                    <FontAwesomeIcon icon={faArrowLeft} className="icon" onClick={handleOnClickBack} />
+                    <FontAwesomeIcon
+                        icon={faArrowLeft}
+                        className="icon"
+                        onClick={handleOnClickBack}
+                    />
                 </S.BackWrapper>
                 <S.LogoWrapper>
                     <Link to={"/logIn"} onClick={handleOnClickLogin}>
-                        <img src={`${process.env.PUBLIC_URL}/global/images/logo.png`} alt="logo" />
+                        <img
+                            src={`${process.env.PUBLIC_URL}/global/images/logo.png`}
+                            alt="logo"
+                        />
                     </Link>
                 </S.LogoWrapper>
                 <S.ContentContainer>
@@ -130,29 +139,53 @@ const SignUpStep5 = () => {
                             <S.CheckboxRowContainer>
                                 <S.CheckboxRow>
                                     <S.CheckboxLabel>
-                                        <input type="checkbox" value="인터넷 검색" onChange={handleCheckboxChange} />
+                                        <input
+                                            type="checkbox"
+                                            value="인터넷 검색"
+                                            onChange={handleCheckboxChange}
+                                        />
                                         <p>인터넷 검색</p>
                                     </S.CheckboxLabel>
                                     <S.CheckboxLabel>
-                                        <input type="checkbox" value="지인 추천" onChange={handleCheckboxChange} />
+                                        <input
+                                            type="checkbox"
+                                            value="지인 추천"
+                                            onChange={handleCheckboxChange}
+                                        />
                                         <p>지인 추천</p>
                                     </S.CheckboxLabel>
                                     <S.CheckboxLabel>
-                                        <input type="checkbox" value="광고" onChange={handleCheckboxChange} />
+                                        <input
+                                            type="checkbox"
+                                            value="광고"
+                                            onChange={handleCheckboxChange}
+                                        />
                                         <p>광고</p>
                                     </S.CheckboxLabel>
                                 </S.CheckboxRow>
                                 <S.CheckboxRow>
                                     <S.CheckboxLabel>
-                                        <input type="checkbox" value="애플리케이션 검색" onChange={handleCheckboxChange} />
+                                        <input
+                                            type="checkbox"
+                                            value="애플리케이션 검색"
+                                            onChange={handleCheckboxChange}
+                                        />
                                         <p>애플리케이션 검색</p>
                                     </S.CheckboxLabel>
                                     <S.CheckboxLabel>
-                                        <input type="checkbox" value="홍보글" onChange={handleCheckboxChange} />
+                                        <input
+                                            type="checkbox"
+                                            value="홍보글"
+                                            onChange={handleCheckboxChange}
+                                        />
                                         <p>홍보글</p>
                                     </S.CheckboxLabel>
                                     <S.CheckboxLabel>
-                                        <input type="checkbox" value="기타" onChange={handleCheckboxChange} />
+                                        <input
+                                            type="checkbox"
+                                            value="기타"
+                                            onChange={handleCheckboxChange}
+                                        />
                                         <p>기타</p>
                                     </S.CheckboxLabel>
                                 </S.CheckboxRow>
@@ -160,7 +193,11 @@ const SignUpStep5 = () => {
                             {showError && (
                                 <S.ConfirmMessageWrapper>
                                     <S.ConfirmMessage>
-                                        <FontAwesomeIcon icon={faCircleXmark} className="icon" style={{ marginLeft: "40px" }} />
+                                        <FontAwesomeIcon
+                                            icon={faCircleXmark}
+                                            className="icon"
+                                            style={{ marginLeft: "40px" }}
+                                        />
                                         하나 이상 체크해주세요
                                     </S.ConfirmMessage>
                                 </S.ConfirmMessageWrapper>
@@ -170,7 +207,13 @@ const SignUpStep5 = () => {
                 </S.ContentContainer>
                 <S.ButtonContainer>
                     {/* 다음버튼 누를 시 이 페이지의 체크박스값 저장, 그리고 store에 저장된 모든 정보 db에 전송 */}
-                    <OneulButton variant={"indigo"} border={"default"} size={"large"} color={"white"} onClick={handleOnClickNext}>
+                    <OneulButton
+                        variant={"indigo"}
+                        border={"default"}
+                        size={"large"}
+                        color={"white"}
+                        onClick={handleOnClickNext}
+                    >
                         다음
                     </OneulButton>
                 </S.ButtonContainer>
