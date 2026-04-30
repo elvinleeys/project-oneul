@@ -1,6 +1,6 @@
-import { combineReducers } from "redux";
-import signUpReducer from "../feature/signup/signUp";
-import loginReducer from "../feature/login/logIn";
+import { combineReducers } from "@reduxjs/toolkit";
+import signUpReducer from "../feature/signup/signUpSlice";
+import loginReducer from "../feature/login/logInSlice";
 import commentReducer from "../feature/comment/model/commentSlice";
 import postEditReducer from "../feature/post/model/postEditSlice";
 import postReducer from "../feature/post/model/postSlice";

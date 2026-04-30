@@ -3,7 +3,10 @@ import S from "./style";
 import { Link, useNavigate } from "react-router-dom";
 import OneulButton from "../../components/button/OneulButton";
 import { useDispatch, useSelector } from "react-redux";
-import { updateSignUpData, resetSignUpData } from "../../feature/signup/signUp";
+import {
+    updateSignUpData,
+    resetSignUpData,
+} from "../../feature/signup/signUpSlice";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeft, faCircleXmark } from "@fortawesome/free-solid-svg-icons";
 import { API_URL } from "../../api/Api";

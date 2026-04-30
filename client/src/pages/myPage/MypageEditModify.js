@@ -7,7 +7,10 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCirclePlus, faCircleXmark } from "@fortawesome/free-solid-svg-icons";
 import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
-import { updateSignUpData, resetSignUpData } from "../../feature/signup/signUp";
+import {
+    updateSignUpData,
+    resetSignUpData,
+} from "../../feature/signup/signUpSlice";
 import useInput from "../../hooks/useInput";
 import { API_URL } from "../../api/Api";
 

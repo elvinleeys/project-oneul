@@ -7,12 +7,12 @@ import GlobalStyle from "./global/global";
 import { FormProvider } from "./pages/myMind/context/FormContext";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { setUser, setUserStatus } from "./modules/logIn";
+import { setUser, setUserStatus } from "./feature/login/logInSlice";
 import { API_URL } from "./api/Api";
 
 function App() {
     const currentUser = useSelector((state) => state.login.currentUser);
-    const userStatus = useSelector((state) => state.login.userStatus);
+    const userStatus = useSelector((state) => state.login.isLogin);
     const dispatch = useDispatch();
 
     // 최초 1번 토큰의 여부 검증

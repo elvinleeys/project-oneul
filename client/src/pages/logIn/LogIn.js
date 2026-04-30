@@ -3,7 +3,7 @@ import S from "./style";
 import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
-import { setUser, setUserStatus } from "../../feature/login/logIn";
+import { setUser, setUserStatus } from "../../feature/login/logInSlice";
 import Input from "../../components/input/style";
 import OneulButton from "../../components/button/OneulButton";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";

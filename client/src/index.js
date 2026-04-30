@@ -3,13 +3,12 @@ import ReactDOM from "react-dom/client";
 import "./index.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
-import { legacy_createStore as createStore } from "redux";
-import { devToolsEnhancer } from "redux-devtools-extension";
+import { configureStore } from "@reduxjs/toolkit";
 import { Provider } from "react-redux";
 import rootReducer from "./store/rootReducer";
 
 // const store = createStore(signUp, devToolsEnhancer());
-const store = createStore(rootReducer, devToolsEnhancer());
+const store = configureStore({ reducer: rootReducer });
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(

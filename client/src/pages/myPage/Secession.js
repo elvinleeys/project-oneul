@@ -5,7 +5,7 @@ import OneulButton from "../../components/button/OneulButton";
 import S from "./style";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { deleteUser } from "../../feature/login/logIn";
+import { deleteUser } from "../../feature/login/logInSlice";
 import { API_URL } from "../../api/Api";
 
 const Secession = () => {
