@@ -53,11 +53,12 @@ const EditActions = styled.div`
 `;
 
 const CancelBtn = styled.button`
-    font-size: 12px;
+    height: auto;
+    font-size: 0.75rem;
     color: #aaa;
     background: #f5f5f5;
     border: none;
-    border-radius: 20px;
+    border-radius: 1.25rem;
     padding: 5px 14px;
     cursor: pointer;
 `;

@@ -24,7 +24,7 @@ const CommentInput = () => {
                     onKeyDown={(e) => e.key === "Enter" && handleSend()}
                 />
                 <SendBtn onClick={() => {}}>
-                    <FontAwesomeIcon icon={faPaperPlane} color="#5B5EA6" />
+                    <FontAwesomeIcon icon={faPaperPlane} className="icon" />
                 </SendBtn>
             </InputWrap>
         </InputRow>
@@ -63,11 +63,18 @@ const StyledInput = styled.input`
 `;
 
 const SendBtn = styled.button`
+    height: auto;
     background: none;
     border: none;
+    border-radius: 0;
+    box-shadow: none;
     cursor: pointer;
     padding: 0;
     font-size: 1rem;
     display: flex;
     align-items: center;
+
+    & .icon {
+        color: #5b5ea6;
+    }
 `;

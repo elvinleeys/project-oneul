@@ -27,8 +27,8 @@ const ReactionBtn = ({ postId, type, count, reacted }) => {
     };
 
     return (
-        <Reaction onClick={handleClick}>
-            <FontAwesomeIcon icon={icon} color={color} />
+        <Reaction $color={color} onClick={handleClick}>
+            <FontAwesomeIcon icon={icon} className="reaction-icon" />
             <span>{cnt}</span>
         </Reaction>
     );
@@ -36,7 +36,12 @@ const ReactionBtn = ({ postId, type, count, reacted }) => {
 
 export default ReactionBtn;
 
-const Reaction = styled.label`
+const Reaction = styled.button`
+    height: auto;
+    background: transparent;
+    border: none;
+    border-radius: 0;
+    box-shadow: none;
     display: flex;
     align-items: center;
     gap: 0.25rem;
@@ -45,5 +50,11 @@ const Reaction = styled.label`
 
     span {
         font-size: 0.625rem;
+        min-width: 2ch;
+        text-align: left;
+    }
+
+    & .reaction-icon path {
+        color: ${({ $color }) => $color};
     }
 `;

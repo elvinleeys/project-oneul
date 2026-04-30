@@ -135,8 +135,11 @@ const Time = styled.span`
 `;
 
 const IconBtn = styled.button`
+    height: auto;
     background: none;
+    box-shadow: none;
     border: none;
+    border-radius: 0;
     cursor: pointer;
     padding: 0;
     display: flex;

@@ -1,11 +1,11 @@
 import React, { useEffect } from "react";
 import styled from "styled-components";
-import TabMenu from "./components/TabMenu/TabMenu";
-import PostCard from "./components/PostCard/PostCard";
-import CommentBottomSheet from "../feature/comment/ui/CommentBS";
-import DeleteConfirmModal from "../feature/modal/ui/DeleteConfirmModal";
+import TabMenu from "../../../feature/post/ui/TabMenu/TabMenu";
+import PostCard from "../../../feature/post/ui/PostCard/PostCard";
+import CommentBS from "../../../feature/comment/ui/CommentBS";
+import DeleteConfirmModal from "../../../feature/modal/ui/DeleteConfirmModal";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchPosts } from "../feature/post/model/postSlice";
+import { fetchPosts } from "../../../feature/post/model/postSlice";
 
 const OurToday = () => {
     const dispatch = useDispatch();
@@ -27,7 +27,7 @@ const OurToday = () => {
                 ))}
             </PostList>
             <DeleteConfirmModal />
-            <CommentBottomSheet />
+            <CommentBS />
         </>
     );
 };

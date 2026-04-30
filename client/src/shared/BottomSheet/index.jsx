@@ -52,6 +52,7 @@ const Sheet = styled(motion.div)`
 const Handle = styled.button`
     width: 2.25rem;
     height: 0.25rem;
+    box-shadow: none;
     background: #ddd;
     border: none;
     border-radius: 2px;
