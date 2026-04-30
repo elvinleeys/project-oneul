@@ -2,9 +2,9 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { startCreate } from "../../../feature/post/model/postEditSlice";
+import { setTab } from "../../model/postSlice";
 import { Tab } from "./Tab";
-import { setTab } from "../../../feature/post/model/postSlice";
+import { startCreate } from "../../model/postEditSlice";
 
 const TABS = [
     { label: "우리의 오늘", value: "all" },
@@ -37,7 +37,7 @@ const TabMenu = () => {
             <WriteButton
                 onClick={() => {
                     dispatch(startCreate());
-                    navigate("/write");
+                    navigate("/edit");
                 }}
             >
                 나의 오늘 쓰기
@@ -57,11 +57,10 @@ const Menu = styled.div`
 
 const TabWrapper = styled.div`
     display: flex;
-    gap: 0.5rem;
+    gap: 0.875rem;
 `;
 
 const WriteButton = styled.button`
-    width: 7.5rem;
     background: #4d4e89;
     color: #fff;
     border: none;

@@ -10,10 +10,8 @@ export const Tab = ({ children, $active, ...props }) => {
     );
 };
 
-const TabBtn = styled.button`
+const TabBtn = styled.div`
     position: relative;
-    background: none;
-    border: none;
     padding-bottom: 0.5rem;
     font-size: 1rem;
     font-weight: ${({ $active }) => ($active ? "bold" : 300)};

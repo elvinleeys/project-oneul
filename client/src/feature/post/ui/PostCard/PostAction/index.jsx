@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import CommentBtn from "../../CommentBtn";
-import ReactionBtn from "../../../../feature/reaction/ReactionBtn";
+import ReactionBtn from "../../../../reaction/ReactionBtn";
 
 const PostAction = ({ postId, reactions }) => {
     return (
@@ -34,5 +34,5 @@ const Container = styled.div`
 const ReactionWrapper = styled.div`
     display: flex;
     align-items: center;
-    gap: 0.75rem;
+    gap: 0.875rem;
 `;

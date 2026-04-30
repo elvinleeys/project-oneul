@@ -3,14 +3,14 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
 import { useDispatch } from "react-redux";
 import styled from "styled-components";
-import { openSheet } from "../../../feature/comment/model/commentSlice";
+import { openSheet } from "../../../comment/model/commentSlice";
 
 const CommentBtn = ({ postId, count }) => {
     const dispatch = useDispatch();
 
     return (
         <Comment onClick={() => dispatch(openSheet())}>
-            <FontAwesomeIcon icon={faMessage} color="#BEC1C5" />
+            <FontAwesomeIcon icon={faMessage} className="message" />
             <span>{count}</span>
         </Comment>
     );
@@ -19,15 +19,22 @@ const CommentBtn = ({ postId, count }) => {
 export default CommentBtn;
 
 const Comment = styled.button`
+    height: auto;
     display: flex;
     align-items: center;
-    gap: 0.25rem;
+    gap: 0.3125rem;
     border: none;
+    border-radius: 0;
+    box-shadow: none;
     background-color: transparent;
     font-size: 1.125rem;
     cursor: pointer;
 
     span {
         font-size: 0.625rem;
+    }
+
+    & .message path {
+        color: #bec1c5;
     }
 `;
