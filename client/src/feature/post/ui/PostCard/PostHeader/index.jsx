@@ -3,9 +3,9 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
 import { useDispatch } from "react-redux";
 import styled from "styled-components";
-import { startEdit } from "../../../../feature/post/model/postEditSlice";
 import { useNavigate } from "react-router-dom";
-import { openModal } from "../../../../feature/modal/model/modalSlice";
+import { startEdit } from "../../../model/postEditSlice";
+import { openModal } from "../../../../modal/model/modalSlice";
 
 const PostHeader = ({ profileImg, nickname, isMine, post }) => {
     const dispatch = useDispatch();
@@ -29,7 +29,7 @@ const PostHeader = ({ profileImg, nickname, isMine, post }) => {
                                     content: post.content,
                                 }),
                             );
-                            navigate("/write");
+                            navigate("/edit");
                         }}
                     >
                         <FontAwesomeIcon icon={faPenToSquare} className="pen" />
@@ -94,6 +94,8 @@ const UpdateBtn = styled.button`
     justify-content: center;
     cursor: pointer;
     border: none;
+    border-radius: 0;
+    box-shadow: none;
     background: none;
     display: inline-block;
     padding: 0;

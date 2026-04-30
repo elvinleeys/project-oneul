@@ -1,9 +1,9 @@
 import React from "react";
 import styled from "styled-components";
 import { useDispatch, useSelector } from "react-redux";
-import { reset, setContent } from "../feature/post/model/postEditSlice";
+import { reset, setContent } from "../../../feature/post/model/postEditSlice";
 import { useNavigate } from "react-router-dom";
-import Button from "../shared/Button";
+import Button from "../../../shared/Button";
 
 const PostEdit = () => {
     const navigate = useNavigate();
@@ -38,7 +38,7 @@ const PostEdit = () => {
                     onClick={(e) => {
                         e.preventDefault();
                         dispatch(reset());
-                        navigate("/");
+                        navigate("/ourToday");
                     }}
                 >
                     취소
@@ -65,13 +65,12 @@ const Title = styled.p`
 `;
 
 const ContentWrapper = styled.div`
-    width: 16.5rem;
-    height: 16.5rem;
+    width: 20rem;
+    height: 20rem;
     background-color: #ffffff;
     padding: 1.25rem 1.75rem;
     border-radius: 1.25rem;
     box-shadow: 0px 4px 7px rgba(0, 0, 0, 0.25);
-    margin-bottom: 0.25rem;
 `;
 
 const TextArea = styled.textarea`

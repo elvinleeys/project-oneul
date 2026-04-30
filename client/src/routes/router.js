@@ -60,7 +60,7 @@ const router = createBrowserRouter([
                 element: <OurToday />,
             },
             {
-                path: "/writeToday",
+                path: "/edit",
                 element: <PostEdit />,
             },
             {
