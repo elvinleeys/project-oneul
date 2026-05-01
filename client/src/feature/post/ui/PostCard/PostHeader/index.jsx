@@ -6,8 +6,9 @@ import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import { startEdit } from "../../../model/postEditSlice";
 import { openModal } from "../../../../modal/model/modalSlice";
+import Avatar from "../../../../../shared/Avatar";
 
-const PostHeader = ({ profileImg, nickname, isMine, post }) => {
+const PostHeader = ({ profileImg, nickname, isMine, postId, content }) => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
@@ -15,7 +16,7 @@ const PostHeader = ({ profileImg, nickname, isMine, post }) => {
         <PostHeaderContainer>
             <AuthorWrapper>
                 <div>
-                    <ProfileImg src={profileImg} alt="profile-img" />
+                    <Avatar src={profileImg} alt="profile-img" size={2.25} />
                 </div>
                 <Nickname>{nickname}</Nickname>
             </AuthorWrapper>
@@ -25,8 +26,8 @@ const PostHeader = ({ profileImg, nickname, isMine, post }) => {
                         onClick={() => {
                             dispatch(
                                 startEdit({
-                                    id: post.id,
-                                    content: post.content,
+                                    id: postId,
+                                    content: content,
                                 }),
                             );
                             navigate("/edit");
@@ -39,7 +40,7 @@ const PostHeader = ({ profileImg, nickname, isMine, post }) => {
                             dispatch(
                                 openModal({
                                     type: "deletePost",
-                                    targetId: post.id,
+                                    targetId: postId,
                                 }),
                             )
                         }
@@ -65,13 +66,6 @@ const AuthorWrapper = styled.div`
     display: flex;
     align-items: center;
     gap: 0.875rem;
-`;
-
-const ProfileImg = styled.img`
-    width: 2.25rem;
-    height: 2.25rem;
-    border-radius: 50%;
-    object-fit: cover;
 `;
 
 const Nickname = styled.p`

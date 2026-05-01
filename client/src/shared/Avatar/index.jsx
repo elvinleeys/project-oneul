@@ -5,11 +5,12 @@ const Avatar = ({ src, size = 2, alt = "avatar" }) => {
     return (
         <Wrapper size={size}>
             {src ? (
-                <Img src={src} alt={alt} />
+                <Img src={src} alt={alt} $size={size} />
             ) : (
                 <Img
                     src="/global/images/default.png"
                     alt="default-profile-image"
+                    $size={size}
                 />
             )}
         </Wrapper>

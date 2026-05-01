@@ -21,7 +21,7 @@ const OurToday = () => {
             <TabMenu />
             <PostList>
                 {posts.map((post) => (
-                    <li key={post.id}>
+                    <li key={post._id}>
                         <PostCard post={post} />
                     </li>
                 ))}

@@ -3,29 +3,32 @@ import styled from "styled-components";
 import PostHeader from "./PostHeader";
 import { PostContent } from "./PostContent";
 import PostAction from "./PostAction";
+import { API_URL } from "../../../../api/Api";
+import { useSelector } from "react-redux";
 
 const PostCard = ({ post }) => {
-    const logo = "/logo192.png";
-    const nickname = "박한영";
-    const isMine = true;
-    const reactions = [
-        { type: "heart", count: 10, reacted: true },
-        { type: "like", count: 3, reacted: false },
-        { type: "smile", count: 5, reacted: false },
-        { type: "sad", count: 1, reacted: false },
-        { type: "angry", count: 0, reacted: false },
-    ];
+    const currentUser = useSelector((state) => state.login.currentUser);
+    const profileImg = `${API_URL}/${post.userProfileImg}`;
+    const isMine = currentUser.email === post.userEmail;
+    const reactionTypes = ["heart", "like", "smile", "sad", "angry"];
+
+    const reactions = reactionTypes.map((type) => ({
+        type,
+        count: post?.[type]?.length ?? 0,
+        reacted: post?.[type]?.includes(currentUser.email),
+    }));
 
     return (
         <PostContainer>
             <PostHeader
-                profileImg={logo}
-                nickname={nickname}
+                profileImg={profileImg}
+                nickname={post.userNickname}
                 isMine={isMine}
-                post={post}
+                postId={post._id}
+                content={post.content}
             />
-            <PostContent>안녕하세요</PostContent>
-            <PostAction postId={post.id} reactions={reactions} />
+            <PostContent>{post.content}</PostContent>
+            <PostAction postId={post._id} reactions={reactions} />
         </PostContainer>
     );
 };
