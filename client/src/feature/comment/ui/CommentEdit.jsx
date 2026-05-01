@@ -16,8 +16,21 @@ const CommentEdit = ({ value, onChangeText, onSave, onCancel }) => {
                 autoFocus
             />
             <EditActions>
-                <CancelBtn onClick={onCancel}>취소</CancelBtn>
-                <SaveBtn onClick={onSave}>저장</SaveBtn>
+                <ActionButton
+                    $color="#aaa"
+                    $background="#f5f5f5"
+                    onClick={onCancel}
+                >
+                    취소
+                </ActionButton>
+
+                <ActionButton
+                    $color="#fff"
+                    $background="#5b5ea6"
+                    onClick={onSave}
+                >
+                    저장
+                </ActionButton>
             </EditActions>
         </EditWrap>
     );
@@ -52,23 +65,16 @@ const EditActions = styled.div`
     margin-top: 6px;
 `;
 
-const CancelBtn = styled.button`
-    height: auto;
+const ActionButton = styled.button`
+    height: unset;
     font-size: 0.75rem;
-    color: #aaa;
-    background: #f5f5f5;
+    color: ${({ $color }) => $color};
+    background: ${({ $background }) => $background};
+
     border: none;
     border-radius: 1.25rem;
-    padding: 5px 14px;
-    cursor: pointer;
-`;
+    box-shadow: none;
 
-const SaveBtn = styled.button`
-    font-size: 12px;
-    color: #fff;
-    background: #5b5ea6;
-    border: none;
-    border-radius: 20px;
-    padding: 5px 14px;
+    padding: 0.5rem 0.875rem;
     cursor: pointer;
 `;
