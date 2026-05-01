@@ -2,32 +2,38 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import styled from "styled-components";
 import { useState } from "react";
 import { iconMap } from "../../../constant/iconMap";
+import { useToggleReaction } from "../model/useToggleReaction";
 
 const ReactionBtn = ({ postId, type, count, reacted }) => {
-    const [isActive, setIsActive] = useState(reacted);
-    const [cnt, setCnt] = useState(count);
+    // const [isActive, setIsActive] = useState(reacted);
+    // const [cnt, setCnt] = useState(count);
+    const { isActive, cnt, handleToggleReaction } = useToggleReaction({
+        postId,
+        type,
+        count,
+        reacted,
+    });
     const icon = isActive ? iconMap[type].solid : iconMap[type].regular;
     const color = iconMap[type].color;
+    // const handleClick = async () => {
+    //     // optimistic update
+    //     setIsActive((prev) => !prev);
+    //     setCnt((prev) => (isActive ? prev - 1 : prev + 1));
 
-    const handleClick = async () => {
-        // optimistic update
-        setIsActive((prev) => !prev);
-        setCnt((prev) => (isActive ? prev - 1 : prev + 1));
-
-        // try {
-        //   await axios.post(`/api/reaction/toggle`, {
-        //     postId,
-        //     type
-        //   });
-        // } catch (e) {
-        //   // 실패 시 롤백
-        //   setIsActive(prev => !prev);
-        //   setCnt(prev => (isActive ? prev + 1 : prev - 1));
-        // }
-    };
+    //     // try {
+    //     //   await axios.post(`/api/reaction/toggle`, {
+    //     //     postId,
+    //     //     type
+    //     //   });
+    //     // } catch (e) {
+    //     //   // 실패 시 롤백
+    //     //   setIsActive(prev => !prev);
+    //     //   setCnt(prev => (isActive ? prev + 1 : prev - 1));
+    //     // }
+    // };
 
     return (
-        <Reaction $color={color} onClick={handleClick}>
+        <Reaction $color={color} onClick={handleToggleReaction}>
             <FontAwesomeIcon icon={icon} className="reaction-icon" />
             <span>{cnt}</span>
         </Reaction>
