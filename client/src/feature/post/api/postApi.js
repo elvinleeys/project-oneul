@@ -1,15 +1,63 @@
-import { API_URL } from "../../../api/Api";
+import { apiSlice } from "../../../shared/api/apiSlice";
 
-export const getPosts = async (type, email) => {
-    if (type === "mine") {
-        const res = await fetch(`${API_URL}/ourToday/checkMyPost/${email}`);
-        const data = await res.json();
-        console.log("내 게시글 데이터", data);
-        return data;
-    } else {
-        const res = await fetch(`${API_URL}/ourToday/checkPost`);
-        const data = await res.json();
-        console.log("전체 게시글 데이터", data);
-        return data;
-    }
-};
+export const postApi = apiSlice.injectEndpoints({
+    endpoints: (builder) => ({
+        // 게시글 조회
+        getPosts: builder.query({
+            query: ({ type, email }) => {
+                if (type === "mine") {
+                    return `/ourToday/checkMyPost/${email}`;
+                }
+
+                return `/ourToday/checkPost`;
+            },
+
+            providesTags: ["Post"],
+        }),
+
+        // 게시글 생성
+        createPost: builder.mutation({
+            query: (body) => ({
+                url: "/ourToday/write",
+                method: "POST",
+                body,
+            }),
+
+            invalidatesTags: ["Post"],
+        }),
+
+        // 게시글 수정
+        updatePost: builder.mutation({
+            query: ({ postId, content }) => ({
+                url: "/ourToday/update",
+                method: "PUT",
+                body: {
+                    id: postId,
+                    content,
+                },
+            }),
+
+            invalidatesTags: ["Post"],
+        }),
+
+        // 게시글 삭제
+        deletePost: builder.mutation({
+            query: (postId) => ({
+                url: "/ourToday/delete",
+                method: "DELETE",
+                body: {
+                    _id: postId,
+                },
+            }),
+
+            invalidatesTags: ["Post"],
+        }),
+    }),
+});
+
+export const {
+    useGetPostsQuery,
+    useCreatePostMutation,
+    useUpdatePostMutation,
+    useDeletePostMutation,
+} = postApi;

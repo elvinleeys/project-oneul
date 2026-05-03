@@ -3,19 +3,20 @@ import styled from "styled-components";
 import PostHeader from "./PostHeader";
 import { PostContent } from "./PostContent";
 import PostAction from "./PostAction";
-import { API_URL } from "../../../../api/Api";
+import { API_URL } from "../../../../shared/api/apiSlice";
 import { useSelector } from "react-redux";
 
 const PostCard = ({ post }) => {
     const currentUser = useSelector((state) => state.login.currentUser);
+    const currentUserEmail = currentUser?.email;
     const profileImg = `${API_URL}/${post.userProfileImg}`;
-    const isMine = currentUser.email === post.userEmail;
+    const isMine = currentUserEmail === post.userEmail;
     const reactionTypes = ["heart", "like", "smile", "sad", "angry"];
 
     const reactions = reactionTypes.map((type) => ({
         type,
         count: post?.[type]?.length ?? 0,
-        reacted: post?.[type]?.includes(currentUser.email),
+        reacted: post?.[type]?.includes(currentUserEmail),
     }));
 
     return (
@@ -28,7 +29,12 @@ const PostCard = ({ post }) => {
                 content={post.content}
             />
             <PostContent>{post.content}</PostContent>
-            <PostAction postId={post._id} reactions={reactions} />
+            <PostAction
+                postId={post._id}
+                reactions={reactions}
+                commentCnt={post.commentCount}
+                email={currentUserEmail}
+            />
         </PostContainer>
     );
 };

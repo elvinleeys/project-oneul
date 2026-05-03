@@ -3,10 +3,10 @@ import styled from "styled-components";
 import CommentBtn from "../../CommentBtn";
 import ReactionBtn from "../../../../reaction/ReactionBtn";
 
-const PostAction = ({ postId, reactions }) => {
+const PostAction = ({ postId, reactions, commentCnt, email }) => {
     return (
         <Container>
-            <CommentBtn postId={postId} count={1} />
+            <CommentBtn postId={postId} count={commentCnt} email={email} />
             <ReactionWrapper>
                 {reactions.map((reaction) => (
                     <ReactionBtn

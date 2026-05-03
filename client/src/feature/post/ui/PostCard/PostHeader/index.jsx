@@ -4,9 +4,8 @@ import React from "react";
 import { useDispatch } from "react-redux";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
-import { startEdit } from "../../../model/postEditSlice";
 import { openModal } from "../../../../modal/model/modalSlice";
-import Avatar from "../../../../../shared/Avatar";
+import Avatar from "../../../../../shared/ui/Avatar";
 
 const PostHeader = ({ profileImg, nickname, isMine, postId, content }) => {
     const dispatch = useDispatch();
@@ -24,13 +23,11 @@ const PostHeader = ({ profileImg, nickname, isMine, postId, content }) => {
                 <UpdateBtnWrapper>
                     <UpdateBtn
                         onClick={() => {
-                            dispatch(
-                                startEdit({
-                                    id: postId,
-                                    content: content,
-                                }),
-                            );
-                            navigate("/edit");
+                            navigate(`/post/edit/${postId}`, {
+                                state: {
+                                    content,
+                                },
+                            });
                         }}
                     >
                         <FontAwesomeIcon icon={faPenToSquare} className="pen" />

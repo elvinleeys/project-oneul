@@ -3,13 +3,16 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
 import { useDispatch } from "react-redux";
 import styled from "styled-components";
-import { openSheet } from "../../../comment/model/commentSlice";
+import { openSheet } from "../../../comment/model/commentUISlice";
 
-const CommentBtn = ({ postId, count }) => {
+const CommentBtn = ({ postId, count, email }) => {
     const dispatch = useDispatch();
+    const handleOpenComment = () => {
+        dispatch(openSheet({ postId, userEmail: email }));
+    };
 
     return (
-        <Comment onClick={() => dispatch(openSheet())}>
+        <Comment onClick={handleOpenComment}>
             <FontAwesomeIcon icon={faMessage} className="message" />
             <span>{count}</span>
         </Comment>
