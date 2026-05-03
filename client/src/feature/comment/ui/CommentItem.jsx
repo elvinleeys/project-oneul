@@ -8,12 +8,16 @@ import { openModal } from "../../modal/model/modalSlice";
 import CommentEdit from "./CommentEdit";
 import { API_URL } from "../../../shared/api/apiSlice";
 import { useUpdateCommentMutation } from "../api/commentApi";
+import { formatTimeAgo } from "../../../shared/util/formatTimeAgo";
 
 const CommentItem = ({ c }) => {
     const dispatch = useDispatch();
     const [updateComment] = useUpdateCommentMutation();
     const [isEditing, setIsEditing] = useState(false);
     const [editText, setEditText] = useState("");
+    console.log("comment :", c);
+    // 댓글 작성 시간
+    const commentTime = formatTimeAgo(c.time);
 
     const handleEditStart = () => {
         setIsEditing((prev) => !prev);
@@ -54,7 +58,7 @@ const CommentItem = ({ c }) => {
                         {c.isMine && <MeBadge>나</MeBadge>}
                     </AuthorWrap>
                     <TimeAndActions>
-                        <Time>{c.time}</Time>
+                        <Time>{commentTime}</Time>
                         {c.isMine && (
                             <>
                                 <IconBtn>
@@ -98,7 +102,13 @@ const CommentItem = ({ c }) => {
     );
 };
 
-export default CommentItem;
+export default React.memo(CommentItem, (prev, next) => {
+    return (
+        prev.c._id === next.c._id &&
+        prev.c.text === next.c.text &&
+        prev.c.time === next.c.time
+    );
+});
 
 const CommentRow = styled.div`
     display: flex;
