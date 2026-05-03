@@ -1,19 +1,19 @@
+import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import styled from "styled-components";
-import { useState } from "react";
-import { iconMap } from "../../../constant/iconMap";
+import { iconMap } from "../../../shared/config/iconMap";
 import { useToggleReaction } from "../model/useToggleReaction";
 
 const ReactionBtn = ({ postId, type, count, reacted }) => {
     // const [isActive, setIsActive] = useState(reacted);
     // const [cnt, setCnt] = useState(count);
-    const { isActive, cnt, handleToggleReaction } = useToggleReaction({
+    const { handleToggleReaction } = useToggleReaction({
         postId,
         type,
-        count,
         reacted,
     });
-    const icon = isActive ? iconMap[type].solid : iconMap[type].regular;
+
+    const icon = reacted ? iconMap[type].solid : iconMap[type].regular;
     const color = iconMap[type].color;
     // const handleClick = async () => {
     //     // optimistic update
@@ -35,12 +35,12 @@ const ReactionBtn = ({ postId, type, count, reacted }) => {
     return (
         <Reaction $color={color} onClick={handleToggleReaction}>
             <FontAwesomeIcon icon={icon} className="reaction-icon" />
-            <span>{cnt}</span>
+            <span>{count}</span>
         </Reaction>
     );
 };
 
-export default ReactionBtn;
+export default React.memo(ReactionBtn);
 
 const Reaction = styled.button`
     height: auto;
