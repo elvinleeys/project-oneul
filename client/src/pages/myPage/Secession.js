@@ -6,7 +6,7 @@ import S from "./style";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { deleteUser } from "../../feature/login/logInSlice";
-import { API_URL } from "../../api/Api";
+import { API_URL } from "../../shared/api/apiSlice";
 
 const Secession = () => {
     const navigate = useNavigate();

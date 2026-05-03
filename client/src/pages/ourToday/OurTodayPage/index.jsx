@@ -1,20 +1,22 @@
-import React, { useEffect } from "react";
+import React from "react";
 import styled from "styled-components";
 import TabMenu from "../../../feature/post/ui/TabMenu/TabMenu";
 import PostCard from "../../../feature/post/ui/PostCard/PostCard";
 import CommentBS from "../../../feature/comment/ui/CommentBS";
 import DeleteConfirmModal from "../../../feature/modal/ui/DeleteConfirmModal";
-import { useDispatch, useSelector } from "react-redux";
-import { fetchPosts } from "../../../feature/post/model/postSlice";
+import { useSelector } from "react-redux";
+import { useGetPostsQuery } from "../../../feature/post/api/postApi";
 
 const OurToday = () => {
-    const dispatch = useDispatch();
-    const { tab, posts } = useSelector((s) => s.post);
+    const { tab } = useSelector((s) => s.post);
     const { currentUser } = useSelector((s) => s.login);
 
-    useEffect(() => {
-        dispatch(fetchPosts({ type: tab, email: currentUser.email }));
-    }, [tab]);
+    const { data: posts = [], isLoading } = useGetPostsQuery({
+        type: tab,
+        email: currentUser.email,
+    });
+
+    if (isLoading) return <div>로딩중...</div>;
 
     return (
         <>

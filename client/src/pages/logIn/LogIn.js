@@ -8,7 +8,7 @@ import Input from "../../components/input/style";
 import OneulButton from "../../components/button/OneulButton";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircleXmark } from "@fortawesome/free-solid-svg-icons";
-import { API_URL } from "../../api/Api";
+import { API_URL } from "../../shared/api/apiSlice";
 
 const LogIn = () => {
     const navigate = useNavigate();

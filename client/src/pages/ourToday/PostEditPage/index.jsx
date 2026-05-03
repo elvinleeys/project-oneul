@@ -1,14 +1,33 @@
-import React from "react";
+import React, { useEffect } from "react";
 import styled from "styled-components";
 import { useDispatch, useSelector } from "react-redux";
 import { reset, setContent } from "../../../feature/post/model/postEditSlice";
-import { useNavigate } from "react-router-dom";
-import Button from "../../../shared/Button";
+import { useLocation, useNavigate } from "react-router-dom";
+import Button from "../../../shared/ui/Button";
+import { usePostEditor } from "../../../feature/post/model/usePostEditor";
 
 const PostEdit = () => {
-    const navigate = useNavigate();
     const dispatch = useDispatch();
-    const { mode, content } = useSelector((s) => s.postEdit);
+    const navigate = useNavigate();
+    const location = useLocation();
+    const editContent = location.state?.content;
+    const { content } = useSelector((s) => s.postEdit);
+    const currentUser = useSelector((s) => s.login.currentUser);
+
+    const { isEditMode, handleSubmit, isLoading } = usePostEditor({
+        content,
+        currentUser,
+    });
+
+    useEffect(() => {
+        if (isEditMode && editContent) {
+            dispatch(setContent(editContent));
+        }
+
+        return () => {
+            dispatch(reset());
+        };
+    }, [dispatch, isEditMode, editContent]);
 
     return (
         <PostEditForm>
@@ -28,9 +47,11 @@ const PostEdit = () => {
                     size="default"
                     onClick={(e) => {
                         e.preventDefault();
+                        handleSubmit();
                     }}
+                    disabled={isLoading}
                 >
-                    {mode === "edit" ? "수정 완료" : "작성 완료"}
+                    {isEditMode ? "수정 완료" : "작성 완료"}
                 </Button>
                 <Button
                     $variant="tertiary"

@@ -6,13 +6,16 @@ import useInput from "../../hooks/useInput";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 import { useSelector } from "react-redux";
-import { API_URL } from "../../api/Api";
+import { API_URL } from "../../shared/api/apiSlice";
 
 const SearchInput = () => {
     const navigate = useNavigate();
     // 검색버튼 눌렀을 시 검색 인풋 활성화
     const [isSearchActive, setIsSearchActive] = useState(false);
-    const [searchResults, setSearchResults] = useState({ myMindResults: [], ourtodayResults: [] });
+    const [searchResults, setSearchResults] = useState({
+        myMindResults: [],
+        ourtodayResults: [],
+    });
 
     // useInput hook 사용
     const [searchValue, setSearchValue, handleSearchChange] = useInput("");
@@ -58,7 +61,9 @@ const SearchInput = () => {
         const fetchUserProfileImage = async () => {
             if (currentUser && currentUser.email) {
                 try {
-                    const response = await fetch(`${API_URL}/user/getProfile/${currentUser.email}`);
+                    const response = await fetch(
+                        `${API_URL}/user/getProfile/${currentUser.email}`,
+                    );
                     const data = await response.json();
                     setProfileImg(data.profileImg);
                 } catch (error) {
@@ -97,7 +102,11 @@ const SearchInput = () => {
                         </Link>
                     </S.ThumbnailWrapper>
                 </S.ProfileContainer>
-                <S.WelcomeMessage className={isSearchActive ? "display-none" : ""}>{currentUser.nickname}님, 반가워요!</S.WelcomeMessage>
+                <S.WelcomeMessage
+                    className={isSearchActive ? "display-none" : ""}
+                >
+                    {currentUser.nickname}님, 반가워요!
+                </S.WelcomeMessage>
                 <OneulInput
                     variant={"active"}
                     size={"default"}
@@ -106,7 +115,10 @@ const SearchInput = () => {
                     onChange={handleSearchChange}
                     onKeyPress={handleKeyPress}
                 />
-                <S.SearchButtonWrapper className={isSearchActive ? "active" : ""} onClick={isSearchActive ? handleSearchSubmit : toggleSearch}>
+                <S.SearchButtonWrapper
+                    className={isSearchActive ? "active" : ""}
+                    onClick={isSearchActive ? handleSearchSubmit : toggleSearch}
+                >
                     <FontAwesomeIcon icon={faMagnifyingGlass} />
                 </S.SearchButtonWrapper>
             </S.HeaderContainer>

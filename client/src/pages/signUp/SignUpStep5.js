@@ -9,7 +9,7 @@ import {
 } from "../../feature/signup/signUpSlice";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeft, faCircleXmark } from "@fortawesome/free-solid-svg-icons";
-import { API_URL } from "../../api/Api";
+import { API_URL } from "../../shared/api/apiSlice";
 
 const SignUpStep5 = () => {
     const navigate = useNavigate();

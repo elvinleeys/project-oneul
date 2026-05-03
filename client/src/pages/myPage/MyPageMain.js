@@ -5,7 +5,7 @@ import { faAngleRight, faUserPen } from "@fortawesome/free-solid-svg-icons";
 import S from "./style";
 import { useDispatch, useSelector } from "react-redux";
 import { setUserLogout } from "../../feature/login/logInSlice";
-import { API_URL } from "../../api/Api";
+import { API_URL } from "../../shared/api/apiSlice";
 
 const MyPageMain = () => {
     const navigate = useNavigate();

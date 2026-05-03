@@ -12,7 +12,7 @@ import {
     resetSignUpData,
 } from "../../feature/signup/signUpSlice";
 import useInput from "../../hooks/useInput";
-import { API_URL } from "../../api/Api";
+import { API_URL } from "../../shared/api/apiSlice";
 
 const MypageEditModify = () => {
     const dispatch = useDispatch();

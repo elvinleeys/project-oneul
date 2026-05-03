@@ -1,18 +1,24 @@
-import React, { useEffect, useState } from 'react';
-import S from './style';
-import useInput from '../../hooks/useInput';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPaperPlane } from '@fortawesome/free-solid-svg-icons';
-import { useSelector } from 'react-redux';
-import { API_URL } from '../../api/Api';
+import React, { useEffect, useState } from "react";
+import S from "./style";
+import useInput from "../../hooks/useInput";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPaperPlane } from "@fortawesome/free-solid-svg-icons";
+import { useSelector } from "react-redux";
+import { API_URL } from "../../shared/api/apiSlice";
 
-const CommentInsert = ({post, showWindow, setOurTodayCommentUpdate, ourTodayCommentUpdate, commentLength}) => {
+const CommentInsert = ({
+    post,
+    showWindow,
+    setOurTodayCommentUpdate,
+    ourTodayCommentUpdate,
+    commentLength,
+}) => {
     // 댓글 입력창의 입력 input을 관리하기 위한 훅함수
-    const [value, setValue, onChangeValue] = useInput("")
+    const [value, setValue, onChangeValue] = useInput("");
     // 댓글 입력창의 프로필 이미지를 관리하기 위한 상태관리
     const [todayProfileImg, setTodayProfileImg] = useState("");
     // 전역변수 currentUser
-    const currentUser = useSelector((state)=>state.login.currentUser);
+    const currentUser = useSelector((state) => state.login.currentUser);
 
     // 댓글 입력시 enter key로도 입력 가능하게 하기 위한 함수
     const handleKeyPress = (e) => {
@@ -26,9 +32,9 @@ const CommentInsert = ({post, showWindow, setOurTodayCommentUpdate, ourTodayComm
         console.log(value);
         try {
             const response = await fetch(`${API_URL}/ourToday/writeComment`, {
-                method: 'POST',
+                method: "POST",
                 headers: {
-                    'Content-Type': 'application/json',
+                    "Content-Type": "application/json",
                 },
                 body: JSON.stringify({
                     postId: post._id,
@@ -41,13 +47,16 @@ const CommentInsert = ({post, showWindow, setOurTodayCommentUpdate, ourTodayComm
             if (response.ok) {
                 const result = await response.json();
                 setValue(""); // 입력값 초기화
-                setOurTodayCommentUpdate(!ourTodayCommentUpdate)
+                setOurTodayCommentUpdate(!ourTodayCommentUpdate);
                 console.log(result);
             } else {
-                console.error('Failed to submit post');
+                console.error("Failed to submit post");
             }
         } catch (error) {
-            console.error('An error occurred while submitting the post:', error);
+            console.error(
+                "An error occurred while submitting the post:",
+                error,
+            );
         }
     };
 
@@ -55,12 +64,14 @@ const CommentInsert = ({post, showWindow, setOurTodayCommentUpdate, ourTodayComm
     useEffect(() => {
         const fetchUserProfileImage = async () => {
             try {
-                    const response = await fetch(`${API_URL}/user/getProfile/${currentUser.email}`);
-                    const data = await response.json();
-                    setTodayProfileImg(data.profileImg);
-                } catch (error) {
-                    console.error("Failed to fetch user profile image", error);
-                }
+                const response = await fetch(
+                    `${API_URL}/user/getProfile/${currentUser.email}`,
+                );
+                const data = await response.json();
+                setTodayProfileImg(data.profileImg);
+            } catch (error) {
+                console.error("Failed to fetch user profile image", error);
+            }
         };
         fetchUserProfileImage();
     }, [showWindow, currentUser.email]);
@@ -73,15 +84,28 @@ const CommentInsert = ({post, showWindow, setOurTodayCommentUpdate, ourTodayComm
             </S.commentCountWrapper>
             <S.commentInputContainer>
                 <S.commentThumbnailWrapper>
-                    <img src={todayProfileImg || `${process.env.PUBLIC_URL}/global/images/default.png`} alt="profile-img" />
+                    <img
+                        src={
+                            todayProfileImg ||
+                            `${process.env.PUBLIC_URL}/global/images/default.png`
+                        }
+                        alt="profile-img"
+                    />
                 </S.commentThumbnailWrapper>
                 <S.commentInputWrapper>
-                    <S.commentInput type='text' placeholder='다른사람과 소통해볼까요?' 
+                    <S.commentInput
+                        type="text"
+                        placeholder="다른사람과 소통해볼까요?"
                         value={value}
                         onChange={onChangeValue}
                         onKeyDown={handleKeyPress}
                     />
-                    <S.commentForwardButton onClick={createComment}><FontAwesomeIcon icon={faPaperPlane} className='paperPlane' /></S.commentForwardButton>
+                    <S.commentForwardButton onClick={createComment}>
+                        <FontAwesomeIcon
+                            icon={faPaperPlane}
+                            className="paperPlane"
+                        />
+                    </S.commentForwardButton>
                 </S.commentInputWrapper>
             </S.commentInputContainer>
         </S.commentInsertContainer>
