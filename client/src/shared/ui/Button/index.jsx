@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import variantMap from "../../constant/color";
+import variantMap from "../../config/color";
 
 const sizeMap = {
     default: "16.25rem" /* 260px */,
