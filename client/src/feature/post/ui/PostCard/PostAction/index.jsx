@@ -22,7 +22,7 @@ const PostAction = ({ postId, reactions, commentCnt, email }) => {
     );
 };
 
-export default PostAction;
+export default React.memo(PostAction);
 
 const Container = styled.div`
     padding: 1rem 0.75rem;

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import styled from "styled-components";
 import PostHeader from "./PostHeader";
 import { PostContent } from "./PostContent";
@@ -6,18 +6,21 @@ import PostAction from "./PostAction";
 import { API_URL } from "../../../../shared/api/apiSlice";
 import { useSelector } from "react-redux";
 
+const reactionTypes = ["heart", "like", "smile", "sad", "angry"];
+
 const PostCard = ({ post }) => {
     const currentUser = useSelector((state) => state.login.currentUser);
     const currentUserEmail = currentUser?.email;
     const profileImg = `${API_URL}/${post.userProfileImg}`;
     const isMine = currentUserEmail === post.userEmail;
-    const reactionTypes = ["heart", "like", "smile", "sad", "angry"];
 
-    const reactions = reactionTypes.map((type) => ({
-        type,
-        count: post?.[type]?.length ?? 0,
-        reacted: post?.[type]?.includes(currentUserEmail),
-    }));
+    const reactions = useMemo(() => {
+        return reactionTypes.map((type) => ({
+            type,
+            count: post?.[type]?.length ?? 0,
+            reacted: post?.[type]?.includes(currentUserEmail),
+        }));
+    }, [post, currentUserEmail]);
 
     return (
         <PostContainer>
@@ -39,7 +42,19 @@ const PostCard = ({ post }) => {
     );
 };
 
-export default PostCard;
+export default React.memo(PostCard, (prev, next) => {
+    const prevPost = prev.post;
+    const nextPost = next.post;
+
+    return (
+        prevPost._id === nextPost._id &&
+        prevPost.content === nextPost.content &&
+        prevPost.commentCount === nextPost.commentCount &&
+        reactionTypes.every(
+            (type) => prevPost[type]?.length === nextPost[type]?.length,
+        )
+    );
+});
 
 const PostContainer = styled.div`
     width: 20rem;
