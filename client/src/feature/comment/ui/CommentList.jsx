@@ -9,7 +9,7 @@ const CommentList = ({ comments }) => {
             <AnimatePresence>
                 {comments?.map((c, i) => (
                     <motion.div
-                        key={c.id}
+                        key={c._id}
                         initial={{ opacity: 0, y: -8 }}
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, height: 0 }}
@@ -31,5 +31,5 @@ const List = styled.div`
     display: flex;
     flex-direction: column;
     gap: 1rem;
-    padding-bottom: 1.25rem;
+    padding-bottom: 5rem;
 `;

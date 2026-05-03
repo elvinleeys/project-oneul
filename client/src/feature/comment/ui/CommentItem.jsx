@@ -1,15 +1,17 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import Avatar from "../../../shared/Avatar";
+import Avatar from "../../../shared/ui/Avatar";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPenToSquare, faTrashCan } from "@fortawesome/free-regular-svg-icons";
 import { useDispatch } from "react-redux";
-import { editComment } from "../model/commentSlice";
 import { openModal } from "../../modal/model/modalSlice";
 import CommentEdit from "./CommentEdit";
+import { API_URL } from "../../../shared/api/apiSlice";
+import { useUpdateCommentMutation } from "../api/commentApi";
 
 const CommentItem = ({ c }) => {
     const dispatch = useDispatch();
+    const [updateComment] = useUpdateCommentMutation();
     const [isEditing, setIsEditing] = useState(false);
     const [editText, setEditText] = useState("");
 
@@ -18,10 +20,22 @@ const CommentItem = ({ c }) => {
         setEditText(c.text);
     };
 
-    const handleEditSave = (id) => {
+    const handleEditSave = async (id) => {
         if (!editText.trim()) return;
-        dispatch(editComment({ id, text: editText.trim() }));
-        setIsEditing((prev) => !prev);
+
+        try {
+            await updateComment({
+                id,
+                commentText: editText.trim(),
+            }).unwrap();
+
+            setIsEditing(false);
+            setEditText("");
+        } catch (error) {
+            console.error("댓글 수정 실패", error);
+        }
+
+        setIsEditing(false);
         setEditText("");
     };
 
@@ -32,7 +46,7 @@ const CommentItem = ({ c }) => {
 
     return (
         <CommentRow>
-            <Avatar />
+            <Avatar src={`${API_URL}/${c.profileImg}`} />
             <CommentBody>
                 <CommentMeta>
                     <AuthorWrap>
@@ -55,7 +69,7 @@ const CommentItem = ({ c }) => {
                                         dispatch(
                                             openModal({
                                                 type: "deleteComment",
-                                                targetId: c.id,
+                                                targetId: c._id,
                                             }),
                                         )
                                     }
@@ -73,7 +87,7 @@ const CommentItem = ({ c }) => {
                     <CommentEdit
                         value={editText}
                         onChangeText={(text) => setEditText(text)} // e 없이 text만 받음
-                        onSave={() => handleEditSave(c.id)}
+                        onSave={() => handleEditSave(c._id)}
                         onCancel={handleEditCancel}
                     />
                 ) : (

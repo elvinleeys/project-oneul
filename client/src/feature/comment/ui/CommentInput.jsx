@@ -1,21 +1,38 @@
 import { faPaperPlane } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useState } from "react";
-import Avatar from "../../../shared/Avatar";
+import Avatar from "../../../shared/ui/Avatar";
 import styled from "styled-components";
+import { useSelector } from "react-redux";
+import { API_URL } from "../../../shared/api/apiSlice";
+import { useCreateCommentMutation } from "../api/commentApi";
 
 const CommentInput = () => {
     const [text, setText] = useState("");
+    const [createComment] = useCreateCommentMutation();
+    const { postId } = useSelector((s) => s.commentUI);
+    const currentUser = useSelector((state) => state.login.currentUser);
+    const profileImgSrc = currentUser
+        ? `${API_URL}/${currentUser.profileImg}`
+        : "";
 
-    const handleSend = () => {
+    const handleSend = async () => {
         if (!text.trim()) return;
-        // dispatch(addComment(text.trim()));
+
+        await createComment({
+            postId: postId,
+            commentText: text,
+            commentUser: currentUser.email,
+            commentProfileImg: currentUser.profileImg,
+            commentUserNickName: currentUser.nickname,
+        });
+
         setText("");
     };
 
     return (
         <InputRow>
-            <Avatar />
+            <Avatar src={profileImgSrc} alt="profile-img" />
             <InputWrap>
                 <StyledInput
                     value={text}
@@ -23,7 +40,7 @@ const CommentInput = () => {
                     placeholder="따뜻한 댓글을 남겨보세요"
                     onKeyDown={(e) => e.key === "Enter" && handleSend()}
                 />
-                <SendBtn onClick={() => {}}>
+                <SendBtn onClick={handleSend}>
                     <FontAwesomeIcon icon={faPaperPlane} className="icon" />
                 </SendBtn>
             </InputWrap>
