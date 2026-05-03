@@ -60,7 +60,11 @@ const router = createBrowserRouter([
                 element: <OurToday />,
             },
             {
-                path: "/edit",
+                path: "/post/new",
+                element: <PostEdit />,
+            },
+            {
+                path: "/post/edit/:postId",
                 element: <PostEdit />,
             },
             {

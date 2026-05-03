@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { setTab } from "../../model/postSlice";
 import { Tab } from "./Tab";
-import { startCreate } from "../../model/postEditSlice";
+import { reset, startCreate } from "../../model/postEditSlice";
 
 const TABS = [
     { label: "우리의 오늘", value: "all" },
@@ -36,8 +36,8 @@ const TabMenu = () => {
             </TabWrapper>
             <WriteButton
                 onClick={() => {
-                    dispatch(startCreate());
-                    navigate("/edit");
+                    dispatch(reset());
+                    navigate("/post/new");
                 }}
             >
                 나의 오늘 쓰기
