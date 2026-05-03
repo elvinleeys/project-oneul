@@ -6,9 +6,15 @@ import reportWebVitals from "./reportWebVitals";
 import { configureStore } from "@reduxjs/toolkit";
 import { Provider } from "react-redux";
 import rootReducer from "./store/rootReducer";
+import { apiSlice } from "./shared/api/apiSlice";
 
 // const store = createStore(signUp, devToolsEnhancer());
-const store = configureStore({ reducer: rootReducer });
+const store = configureStore({
+    reducer: rootReducer,
+
+    middleware: (getDefaultMiddleware) =>
+        getDefaultMiddleware().concat(apiSlice.middleware),
+});
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(

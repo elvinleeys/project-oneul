@@ -8,7 +8,7 @@ import { FormProvider } from "./pages/myMind/context/FormContext";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setUser, setUserStatus } from "./feature/login/logInSlice";
-import { API_URL } from "./api/Api";
+import { API_URL } from "./shared/api/apiSlice";
 
 function App() {
     const currentUser = useSelector((state) => state.login.currentUser);
