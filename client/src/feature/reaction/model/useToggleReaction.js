@@ -1,45 +1,30 @@
-import { useState } from "react";
-import { toggleReaction } from "../api/toggleReaction";
+import { useToggleReactionMutation } from "../../post/api/postApi";
+import { useSelector } from "react-redux";
 
-export const useToggleReaction = ({
-    postId,
-    type,
-    count,
-    reacted,
-    userEmail,
-}) => {
-    const [isActive, setIsActive] = useState(reacted);
-    const [cnt, setCnt] = useState(count);
-    const [loading, setLoading] = useState(false);
+export const useToggleReaction = ({ postId, type, reacted }) => {
+    const { tab } = useSelector((s) => s.post);
+    const currentUser = useSelector((s) => s.login.currentUser);
+
+    const [toggleReaction, { isLoading }] = useToggleReactionMutation();
 
     const handleToggleReaction = async () => {
-        if (loading) return;
-
-        setLoading(true);
-
-        // optimistic update
-        setIsActive((prev) => !prev);
-        setCnt((prev) => (isActive ? prev - 1 : prev + 1));
+        if (isLoading) return;
 
         try {
             await toggleReaction({
                 postId,
                 type,
-                reacted: isActive,
-                userEmail,
-            });
+                reacted,
+                userEmail: currentUser.email,
+                tab,
+                email: currentUser.email,
+            }).unwrap();
         } catch (e) {
-            // rollback
-            setIsActive((prev) => !prev);
-            setCnt((prev) => (isActive ? prev + 1 : prev - 1));
-        } finally {
-            setLoading(false);
+            console.error(e);
         }
     };
 
     return {
-        isActive,
-        cnt,
         handleToggleReaction,
     };
 };
