@@ -1,24 +1,39 @@
 import styled from "styled-components";
-import Button from "../../../shared/Button";
-import Dialog from "../../../shared/Dialog";
+import Button from "../../../shared/ui/Button";
+import Dialog from "../../../shared/ui/Dialog";
 import { useDispatch, useSelector } from "react-redux";
 import { closeModal } from "../model/modalSlice";
-import { deleteComment } from "../../comment/model/commentSlice";
+import { useDeleteCommentMutation } from "../../comment/api/commentApi";
+import { useDeletePostMutation } from "../../post/api/postApi";
 
-export default function DeleteConfirmModal({ onConfirm }) {
+export default function DeleteConfirmModal() {
     const { isOpen, type, targetId } = useSelector((s) => s.modal);
+    const { postId } = useSelector((s) => s.commentUI);
     const dispatch = useDispatch();
+    const [deleteComment, { isLoading: isDeletingComment }] =
+        useDeleteCommentMutation();
+    const [deletePost, { isLoading: isDeletingPost }] = useDeletePostMutation();
     const onCancel = () => dispatch(closeModal());
     const target = type === "deleteComment" ? "댓글" : "게시글";
+    const isLoading = isDeletingComment || isDeletingPost || false;
 
-    const handleConfirm = () => {
-        if (type === "deleteComment") {
-            // dispatch(deleteComment(targetId));
+    const handleConfirm = async () => {
+        try {
+            if (type === "deleteComment") {
+                await deleteComment({
+                    commentId: targetId,
+                    postId,
+                }).unwrap();
+            }
+
+            if (type === "deletePost") {
+                await deletePost(targetId).unwrap();
+            }
+
+            dispatch(closeModal());
+        } catch (error) {
+            console.error(error);
         }
-        if (type === "deletePost") {
-            // dispatch(deletePost(targetId));
-        }
-        dispatch(closeModal());
     };
 
     return (
@@ -30,7 +45,12 @@ export default function DeleteConfirmModal({ onConfirm }) {
                 <Button $variant="neutral" $full onClick={onCancel}>
                     취소
                 </Button>
-                <Button $variant="danger" $full onClick={handleConfirm}>
+                <Button
+                    $variant="danger"
+                    $full
+                    onClick={handleConfirm}
+                    disabled={isLoading}
+                >
                     삭제하기
                 </Button>
             </BtnRow>
