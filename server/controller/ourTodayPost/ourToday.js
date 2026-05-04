@@ -67,6 +67,9 @@ const getOurTodayPost = async (req, res) => {
             {
                 $addFields: {
                     commentCount: { $size: "$comments" },
+                    isMine: {
+                        $eq: ["$userEmail", email],
+                    },
                 },
             },
             {
@@ -116,6 +119,7 @@ const getMyTodayPost = async (req, res) => {
             {
                 $addFields: {
                     commentCount: { $size: "$comments" },
+                    isMine: true,
                 },
             },
             {

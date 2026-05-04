@@ -12,7 +12,6 @@ const PostCard = ({ post }) => {
     const currentUser = useSelector((state) => state.login.currentUser);
     const currentUserEmail = currentUser?.email;
     const profileImg = `${API_URL}/${post.userProfileImg}`;
-    const isMine = currentUserEmail === post.userEmail;
 
     const reactions = useMemo(() => {
         return reactionTypes.map((type) => ({
@@ -27,7 +26,7 @@ const PostCard = ({ post }) => {
             <PostHeader
                 profileImg={profileImg}
                 nickname={post.userNickname}
-                isMine={isMine}
+                isMine={post.isMine}
                 postId={post._id}
                 content={post.content}
             />

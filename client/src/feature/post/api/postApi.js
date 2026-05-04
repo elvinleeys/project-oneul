@@ -29,10 +29,10 @@ export const postApi = apiSlice.injectEndpoints({
         getPosts: builder.query({
             query: ({ type, email }) => {
                 if (type === "mine") {
-                    return `/ourToday/checkMyPost/${email}`;
+                    return `/ourToday/posts/me?email=${email}`;
                 }
 
-                return `/ourToday/checkPost`;
+                return `/ourToday/posts?email=${email}`;
             },
 
             providesTags: ["Post"],
