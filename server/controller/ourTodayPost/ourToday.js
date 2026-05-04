@@ -100,13 +100,13 @@ const getOurTodayPost = async (req, res) => {
 
 const getMyTodayPost = async (req, res) => {
     try {
-        const { userEmail } = req.params;
+        const { email } = req.query;
         // 전체 게시글을 조회하되 id의 내림차순으로 정렬시켜 불러옴
         // 즉, 최신글 순으로 게시글 정보 데이터를 담는다.
         const posts = await OurToday.aggregate([
             {
                 $match: {
-                    userEmail: userEmail,
+                    userEmail: email,
                 },
             },
             {
