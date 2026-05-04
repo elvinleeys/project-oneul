@@ -53,6 +53,7 @@ const createPostOurToday = async (req, res) => {
 // 게시글의 데이터 정보를 response에 담아줄 함수
 const getOurTodayPost = async (req, res) => {
     try {
+        const { email } = req.query;
         // 전체 게시글을 조회하되 id의 내림차순으로 정렬시켜 불러옴
         // 즉, 최신글 순으로 게시글 정보 데이터를 담는다.
         const posts = await OurToday.aggregate([
