@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Banner from "../banner/Banner";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
     faAngleRight,
@@ -10,21 +10,20 @@ import {
 import S from "./style";
 import BannerMain from "../banner/BannerMain";
 import { useSelector } from "react-redux";
-import OurTodayCardPost from "../ourToday/OurTodayCardPost";
+import PostCard from "../../feature/post/ui/PostCard/PostCard";
 import { API_URL } from "../../shared/api/apiSlice";
+import CommentBS from "../../feature/comment/ui/CommentBS";
 
 const Main = () => {
     const navigate = useNavigate();
-    const location = useLocation();
 
     const isLogin = useSelector((state) => state.login.isLogin);
     const currentUser = useSelector((state) => state.login.currentUser);
+    const email = currentUser?.email;
 
     const [data, setData] = useState([]);
     const [calendarData, setCalendarData] = useState([]);
     const [postData, setPostData] = useState(null);
-    // 게시글의 정보가 update됨을 관리할 상태 관리
-    const [ourTodayUpdate, setOurTodayUpdate] = useState(false);
 
     const todayObject = {
         year: new Date().getFullYear(), //오늘 연도
@@ -76,18 +75,20 @@ const Main = () => {
     }, []);
 
     useEffect(() => {
+        if (!email) return;
         const getBestPost = async () => {
-            const response = await fetch(`${API_URL}/ourToday/checkBestPost`);
-            const dayBestPost = await response.json();
-            if (dayBestPost.message === "게시글이 존재하지 않습니다.") {
-                setPostData(null);
-            } else if (dayBestPost) {
-                setPostData(dayBestPost);
+            const response = await fetch(
+                `${API_URL}/ourToday/posts/best?email=${email}`,
+            );
+            if (!response.ok) {
+                throw new Error("API 실패");
             }
+            const dayBestPost = await response.json();
+            setPostData(dayBestPost);
         };
 
         getBestPost();
-    }, [location.path, ourTodayUpdate]);
+    }, [email]);
     console.log("dDDd", postData);
 
     return (
@@ -219,17 +220,11 @@ const Main = () => {
                         </Link>
                     </div>
                     <div className="body">
-                        {postData && (
-                            <OurTodayCardPost
-                                post={postData}
-                                posts={[postData]} // 필요하다면 배열 형태로 넘기기
-                                ourTodayUpdate={ourTodayUpdate}
-                                setOurTodayUpdate={setOurTodayUpdate}
-                            />
-                        )}
+                        {postData && <PostCard post={postData} />}
                     </div>
                 </S.BoxForOurToday>
             </S.Wrapper>
+            <CommentBS />
         </>
     );
 };

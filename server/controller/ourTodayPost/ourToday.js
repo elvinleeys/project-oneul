@@ -508,48 +508,50 @@ const deleteOurTodayComment = async (req, res) => {
 // 베스트 게시글을 조회할 controller 구성
 const getOurTodayBestPost = async (req, res) => {
     try {
-        // aggregate이란 sharding 기반(데이터를 분해)의 데이터를 효율적으로 처리하고
-        // 집계하는 프레임워크
-        // 현재 sort를 통해 heart 데이터 배열의 length별로 정렬할 수 없으므로
-        // 데이터를 분해한다.
+        const { email } = req.query;
+
         const bestPost = await OurToday.aggregate([
+            // ourToday 형식: 댓글 수, isMine 필드 추가
             {
-                // 게시글에 새로운 필드를 추가
-                $addFields: {
-                    // heartLength라는 key값에 heart의 크기별로 데이터를 담고
-                    heartLength: { $size: "$heart" },
+                $lookup: {
+                    from: "comment",
+                    localField: "_id",
+                    foreignField: "postId",
+                    as: "comments",
                 },
             },
             {
-                // sort를 통해 데이터를 정렬
+                $addFields: {
+                    commentCount: { $size: "$comments" },
+                    isMine: { $eq: ["$userEmail", email] },
+                    heartLength: { $size: "$heart" }, // 정렬용 임시 필드
+                },
+            },
+            // 기존 getBestPost 정렬 기준 유지
+            {
                 $sort: {
-                    // heart의 길이에 따라 내림차순 정렬하고
                     heartLength: -1,
-                    // 그 다음으로 _id를 내림차순으로 정렬
-                    // (즉 최신글 순으로 정렬)
                     _id: -1,
                 },
             },
             {
-                // 상위 1개만 가져오기
-                $limit: 1,
+                $project: {
+                    comments: 0, // 댓글 배열 제거
+                    heartLength: 0, // 정렬용 임시 필드 제거
+                },
             },
+            { $limit: 1 },
         ]);
 
-        // console.log(bestPost);
-
-        // 만일 bestPost가 존재한다면
         if (bestPost.length > 0) {
             return res.status(200).json(bestPost[0]);
         } else {
-            return res.status(404).json({
-                message: "게시글이 존재하지 않습니다.",
-            });
+            return res
+                .status(404)
+                .json({ message: "게시글이 존재하지 않습니다." });
         }
     } catch (error) {
-        return res.status(500).json({
-            message: error.message,
-        });
+        return res.status(500).json({ message: error.message });
     }
 };
 

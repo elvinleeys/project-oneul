@@ -40,7 +40,7 @@ ourTodayRouter.put("/minusPostAngryReaction", deleteOurTodayPostAngryReaction);
 ourTodayRouter.post("/writeComment", createCommentOurToday);
 ourTodayRouter.put("/updateComment", updateOurTodayComment);
 ourTodayRouter.delete("/deleteComment", deleteOurTodayComment);
-ourTodayRouter.get("/checkBestPost", getOurTodayBestPost);
+ourTodayRouter.get("/posts/best", getOurTodayBestPost);
 
 ourTodayRouter.get("/checkPostComment/:postId", getOurTodayComment);
 ourTodayRouter.get("/posts", getOurTodayPost);
