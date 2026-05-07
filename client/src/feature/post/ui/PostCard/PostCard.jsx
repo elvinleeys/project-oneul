@@ -8,7 +8,7 @@ import { useSelector } from "react-redux";
 
 const reactionTypes = ["heart", "like", "smile", "sad", "angry"];
 
-const PostCard = ({ post }) => {
+const PostCard = ({ post, keyword }) => {
     const currentUser = useSelector((state) => state.login.currentUser);
     const currentUserEmail = currentUser?.email;
     const profileImg = `${API_URL}/${post.userProfileImg}`;
@@ -30,7 +30,7 @@ const PostCard = ({ post }) => {
                 postId={post._id}
                 content={post.content}
             />
-            <PostContent>{post.content}</PostContent>
+            <PostContent keyword={keyword}>{post.content}</PostContent>
             <PostAction
                 postId={post._id}
                 reactions={reactions}

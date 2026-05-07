@@ -4,9 +4,9 @@ import { Link, useNavigate } from "react-router-dom";
 import OneulInput from "../../components/input/OneulInput";
 import useInput from "../../hooks/useInput";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 import { useSelector } from "react-redux";
 import { API_URL } from "../../shared/api/apiSlice";
+import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 
 const SearchInput = () => {
     const navigate = useNavigate();

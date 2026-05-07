@@ -4,7 +4,6 @@ import LogIn from "../pages/logIn/LogIn";
 import SignUp from "../pages/signUp/SignUp";
 import Main from "../pages/main/Main";
 import Banner from "../pages/banner/Banner";
-import Search from "../pages/search/Search";
 import OurToday from "../pages/ourToday/OurTodayPage";
 import MyMind from "../pages/myMind/MyMind";
 import Calendar from "../pages/calendar/Calendar";
@@ -41,6 +40,7 @@ import DeleteMyMind from "../pages/calendar/DeleteMyMind";
 import MyMindHome from "../pages/myMind/MyMindHome";
 import CalendarHome from "../pages/calendar/CalendarHome";
 import MypageEditModify from "../pages/myPage/MypageEditModify";
+import SearchPage from "../pages/search/SearchPage";
 
 const router = createBrowserRouter([
     {
@@ -53,7 +53,7 @@ const router = createBrowserRouter([
             },
             {
                 path: "/search",
-                element: <Search />,
+                element: <SearchPage />,
             },
             {
                 path: "/ourToday",
