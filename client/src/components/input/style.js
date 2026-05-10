@@ -23,8 +23,8 @@ const sizeCSS = {
 };
 
 const Input = styled.input`
-    ${({ variant }) => variantCSS[variant]}
-    ${({ size }) => sizeCSS[size]}
+    ${({ $variant }) => variantCSS[$variant]}
+    ${({ $size }) => sizeCSS[$size]}
     border: none;
     padding: 0 20px;
     outline: none;

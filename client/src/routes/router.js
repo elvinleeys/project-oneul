@@ -4,13 +4,12 @@ import LogIn from "../pages/logIn/LogIn";
 import SignUp from "../pages/signUp/SignUp";
 import Main from "../pages/main/Main";
 import Banner from "../pages/banner/Banner";
-import Search from "../pages/search/Search";
-import OurToday from "../pages/ourToday/OurToday";
+import OurToday from "../pages/ourToday/OurTodayPage";
 import MyMind from "../pages/myMind/MyMind";
 import Calendar from "../pages/calendar/Calendar";
 import MyPage from "../pages/myPage/MyPage";
 import PageNotFound from "../pages/error/PageNotFound";
-import WriteToday from "../pages/ourToday/WriteToday";
+import PostEdit from "../pages/ourToday/PostEditPage";
 import MyPageMain from "../pages/myPage/MyPageMain";
 import BannerMain from "../pages/banner/BannerMain";
 import Banner4 from "../pages/banner/Banner4";
@@ -41,6 +40,7 @@ import DeleteMyMind from "../pages/calendar/DeleteMyMind";
 import MyMindHome from "../pages/myMind/MyMindHome";
 import CalendarHome from "../pages/calendar/CalendarHome";
 import MypageEditModify from "../pages/myPage/MypageEditModify";
+import SearchPage from "../pages/search/SearchPage";
 
 const router = createBrowserRouter([
     {
@@ -53,15 +53,19 @@ const router = createBrowserRouter([
             },
             {
                 path: "/search",
-                element: <Search />,
+                element: <SearchPage />,
             },
             {
                 path: "/ourToday",
                 element: <OurToday />,
             },
             {
-                path: "/writeToday",
-                element: <WriteToday />,
+                path: "/post/new",
+                element: <PostEdit />,
+            },
+            {
+                path: "/post/edit/:postId",
+                element: <PostEdit />,
             },
             {
                 path: "/myMind",

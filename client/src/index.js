@@ -3,19 +3,18 @@ import ReactDOM from "react-dom/client";
 import "./index.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
-import { combineReducers, legacy_createStore as createStore } from "redux";
-import { devToolsEnhancer } from "redux-devtools-extension";
+import { configureStore } from "@reduxjs/toolkit";
 import { Provider } from "react-redux";
-import signUpReducer from "./modules/signUp";
-import loginReducer from "./modules/logIn";
-
-const rootReducer = combineReducers({
-    signup: signUpReducer,
-    login: loginReducer,
-});
+import rootReducer from "./store/rootReducer";
+import { apiSlice } from "./shared/api/apiSlice";
 
 // const store = createStore(signUp, devToolsEnhancer());
-const store = createStore(rootReducer, devToolsEnhancer());
+const store = configureStore({
+    reducer: rootReducer,
+
+    middleware: (getDefaultMiddleware) =>
+        getDefaultMiddleware().concat(apiSlice.middleware),
+});
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
@@ -23,7 +22,7 @@ root.render(
         <Provider store={store}>
             <App />
         </Provider>
-    </>
+    </>,
 );
 
 // If you want to start measuring performance in your app, pass a function

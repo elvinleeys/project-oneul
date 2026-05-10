@@ -1,13 +1,13 @@
 # 프로젝트 오늘
 
 ## 📚 목차
+
 - [👋 소개](#-소개)
 - [⚡ 기능](#-기능)
 - [🧩 시스템 아키텍처](#-시스템-아키텍처)
 - [🛠 프로젝트 기술 스택](#-프로젝트-기술-스택)
 - [📁 패키지 구조](#-패키지-구조)
 - [🚀 개선 사항](#-개선-사항)
-
 
 ## 👋 소개
 
@@ -33,14 +33,14 @@
 
 ### '오늘'은 다음과 같은 서비스들을 제공합니다.
 
--   로그인
--   회원가입
--   메인
--   검색
--   나의 마음 돌아보기 (사용자의 하루를 정리, 감정을 표현)
--   캘린더 (사용자가 작성한 나의 마음보기를 날짜에 기반하여 정리)
--   우리의 오늘 (다른 사용자와 글을 공유)
--   마이페이지
+- 로그인
+- 회원가입
+- 메인
+- 검색
+- 나의 마음 돌아보기 (사용자의 하루를 정리, 감정을 표현)
+- 캘린더 (사용자가 작성한 나의 마음보기를 날짜에 기반하여 정리)
+- 우리의 오늘 (다른 사용자와 글을 공유)
+- 마이페이지
 
 ---
 
@@ -53,12 +53,16 @@
 ---
 
 ## 🛠 프로젝트 기술 스택
+
 ### 🌐 Client
+
 #### 언어
+
 ![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=flat&logo=javascript&logoColor=black)
 ![React](https://img.shields.io/badge/React-61DAFB?style=flat&logo=react&logoColor=black)
 
 #### 라이브러리 / 상태관리
+
 ![Redux](https://img.shields.io/badge/Redux-764ABC?style=flat&logo=redux&logoColor=white)
 ![React Hook Form](https://img.shields.io/badge/React_Hook_Form-EC5990?style=flat)
 ![React Router](https://img.shields.io/badge/React_Router-CA4245?style=flat)
@@ -66,6 +70,7 @@
 ![FontAwesome](https://img.shields.io/badge/FontAwesome-528DD1?style=flat)
 
 #### 스타일링 / UI
+
 ![Styled Components](https://img.shields.io/badge/Styled_Components-DB7093?style=flat)
 ![Styled Reset](https://img.shields.io/badge/Styled_Reset-FF69B4?style=flat)
 ![Slick Carousel](https://img.shields.io/badge/Slick_Carousel-1DB954?style=flat)
@@ -75,21 +80,27 @@
 ---
 
 ### ⚙ Server
+
 #### 언어 / 런타임
+
 ![Node.js](https://img.shields.io/badge/Node.js-339933?style=flat&logo=node.js&logoColor=white)
 ![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=flat&logo=javascript&logoColor=black)
 
 #### 프레임워크
+
 ![Express](https://img.shields.io/badge/Express-000000?style=flat&logo=express&logoColor=white)
 
 #### 데이터베이스
+
 ![MongoDB](https://img.shields.io/badge/MongoDB-47A248?style=flat&logo=mongodb&logoColor=white)
 
 #### 인증 / 보안
+
 ![Passport](https://img.shields.io/badge/Passport-000000?style=flat)
 ![JWT](https://img.shields.io/badge/JWT-000000?style=flat)
 
 #### 유틸리티
+
 ![Dotenv](https://img.shields.io/badge/Dotenv-000000?style=flat)
 ![Cors](https://img.shields.io/badge/CORS-000000?style=flat)
 ![Multer](https://img.shields.io/badge/Multer-000000?style=flat)
@@ -101,7 +112,9 @@
 ---
 
 ## 📁 패키지 구조
+
 ### client
+
 ```bash
 client
 ├─ src
@@ -116,6 +129,7 @@ client
 ```
 
 ### server
+
 ```bash
 server
 ├─ auth            : JWT 전략 및 인증 로직
@@ -128,7 +142,7 @@ server
 ├─ models          : DB 스키마
 ├─ routes          : API 라우터
 ├─ utils           : 유틸 함수
-└─ app.js          : 서버 진입점 
+└─ app.js          : 서버 진입점
 ```
 
 [맨 위로](#-목차)
@@ -136,13 +150,25 @@ server
 ---
 
 ## 🚀 개선 사항
+
 - **2025.10.19** (by 이영섭)
+
 1. API 경로 변수로 치환
 2. package.json에 server 진입점 추가
-</br>
+   </br>
 
 - **2025.10.20** (by 이영섭)
+
 1. bestPost 관련 로직 수정 => best 글 하나만 가져오도록 controller 및 MainPage(client) 로직 수정
 
 - **2025.11.10** (by 이영섭)
+
 1. profileImg 경로 배포/로컬 환경에 따라 동적으로 변경되도록 설정
+
+- **2026.04.29 ~ 2026.05.01** (by 이영섭)
+
+1. 컴포넌트 구조 변경
+
+- **2026.05.01 ~ 2026.05.04** (by 이영섭)
+
+1. api 요청 구조 변경
