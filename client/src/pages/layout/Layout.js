@@ -2,16 +2,25 @@ import React, { useEffect } from "react";
 import { NavLink, Outlet, useLocation } from "react-router-dom";
 import S from "./style";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faHeartCircleCheck, faCalendarDays, faHouse, faUsers, faUser } from "@fortawesome/free-solid-svg-icons";
+import {
+    faHeartCircleCheck,
+    faCalendarDays,
+    faHouse,
+    faUsers,
+    faUser,
+} from "@fortawesome/free-solid-svg-icons";
 import SearchInput from "./SearchInput";
-import { useSelector } from "react-redux"
-
+import { useSelector } from "react-redux";
 
 const Layout = () => {
     // useLocation을 써서 메인, 우리의오늘, 검색일때 화면에 header 표시
     const location = useLocation();
     const path = location.pathname;
-    const showHeader = path === "/" || path === "/ourToday" || path === `/search` || path === "/writeToday";
+    const showHeader =
+        path === "/" ||
+        path === "/ourToday" ||
+        path === `/search` ||
+        path === "/edit";
 
     const currentUser = useSelector((state) => state.login.currentUser);
     useEffect(() => {
@@ -23,18 +32,24 @@ const Layout = () => {
             <S.Wrapper>
                 {showHeader && <SearchInput />}
                 <S.Main>
-                    <Outlet/>
+                    <Outlet />
                 </S.Main>
                 <S.Nav>
                     <NavLink to={"/myMind"}>
                         <S.NavWrap>
-                            <FontAwesomeIcon icon={faHeartCircleCheck} className="icon" />
+                            <FontAwesomeIcon
+                                icon={faHeartCircleCheck}
+                                className="icon"
+                            />
                             <p>나의 마음보기</p>
                         </S.NavWrap>
                     </NavLink>
                     <NavLink to={"/calendar"}>
                         <S.NavWrap>
-                            <FontAwesomeIcon icon={faCalendarDays} className="icon" />
+                            <FontAwesomeIcon
+                                icon={faCalendarDays}
+                                className="icon"
+                            />
                             <p>캘린더</p>
                         </S.NavWrap>
                     </NavLink>

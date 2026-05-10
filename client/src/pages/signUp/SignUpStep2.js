@@ -4,11 +4,14 @@ import { Link, useNavigate } from "react-router-dom";
 import Input from "../../components/input/style";
 import OneulButton from "../../components/button/OneulButton";
 import { useDispatch, useSelector } from "react-redux";
-import { updateSignUpData, resetSignUpData } from "../../modules/signUp";
+import {
+    updateSignUpData,
+    resetSignUpData,
+} from "../../feature/signup/signUpSlice";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeft, faCircleXmark } from "@fortawesome/free-solid-svg-icons";
 import useInput from "../../hooks/useInput";
-import { API_URL } from "../../api/Api";
+import { API_URL } from "../../shared/api/apiSlice";
 
 const SignUpStep2 = () => {
     const navigate = useNavigate();
@@ -105,11 +108,18 @@ const SignUpStep2 = () => {
         <S.Background>
             <S.Wrapper>
                 <S.BackWrapper>
-                    <FontAwesomeIcon icon={faArrowLeft} className="icon" onClick={handleOnClickBack} />
+                    <FontAwesomeIcon
+                        icon={faArrowLeft}
+                        className="icon"
+                        onClick={handleOnClickBack}
+                    />
                 </S.BackWrapper>
                 <S.LogoWrapper>
                     <Link to={"/logIn"} onClick={handleOnClickLogin}>
-                        <img src={`${process.env.PUBLIC_URL}/global/images/logo.png`} alt="logo" />
+                        <img
+                            src={`${process.env.PUBLIC_URL}/global/images/logo.png`}
+                            alt="logo"
+                        />
                     </Link>
                 </S.LogoWrapper>
                 <S.ContentContainer>
@@ -126,7 +136,10 @@ const SignUpStep2 = () => {
                         <S.ConfirmMessageWrapper>
                             {nameError === "required" && (
                                 <S.ConfirmMessage>
-                                    <FontAwesomeIcon icon={faCircleXmark} className="icon" />
+                                    <FontAwesomeIcon
+                                        icon={faCircleXmark}
+                                        className="icon"
+                                    />
                                     이름을 입력해주세요.
                                 </S.ConfirmMessage>
                             )}
@@ -146,19 +159,28 @@ const SignUpStep2 = () => {
                         <S.ConfirmMessageWrapper>
                             {mobileError === "required" && (
                                 <S.ConfirmMessage>
-                                    <FontAwesomeIcon icon={faCircleXmark} className="icon" />
+                                    <FontAwesomeIcon
+                                        icon={faCircleXmark}
+                                        className="icon"
+                                    />
                                     전화번호를 입력해주세요.
                                 </S.ConfirmMessage>
                             )}
                             {mobileError === "invalid" && (
                                 <S.ConfirmMessage>
-                                    <FontAwesomeIcon icon={faCircleXmark} className="icon" />
+                                    <FontAwesomeIcon
+                                        icon={faCircleXmark}
+                                        className="icon"
+                                    />
                                     올바른 전화번호를 입력해주세요.
                                 </S.ConfirmMessage>
                             )}
                             {mobileError === "duplicate" && (
                                 <S.ConfirmMessage>
-                                    <FontAwesomeIcon icon={faCircleXmark} className="icon" />
+                                    <FontAwesomeIcon
+                                        icon={faCircleXmark}
+                                        className="icon"
+                                    />
                                     중복된 전화번호입니다.
                                 </S.ConfirmMessage>
                             )}
@@ -166,7 +188,13 @@ const SignUpStep2 = () => {
                     </S.Label>
                 </S.ContentContainer>
                 <S.ButtonContainer>
-                    <OneulButton variant={"indigo"} border={"default"} size={"large"} color={"white"} onClick={handleOnClickNext}>
+                    <OneulButton
+                        variant={"indigo"}
+                        border={"default"}
+                        size={"large"}
+                        color={"white"}
+                        onClick={handleOnClickNext}
+                    >
                         다음
                     </OneulButton>
                 </S.ButtonContainer>

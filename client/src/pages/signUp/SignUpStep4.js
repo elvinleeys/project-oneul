@@ -3,7 +3,10 @@ import S from "./style";
 import { Link, useNavigate } from "react-router-dom";
 import OneulButton from "../../components/button/OneulButton";
 import { useDispatch, useSelector } from "react-redux";
-import { updateSignUpData, resetSignUpData } from "../../modules/signUp";
+import {
+    updateSignUpData,
+    resetSignUpData,
+} from "../../feature/signup/signUpSlice";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeft, faCirclePlus } from "@fortawesome/free-solid-svg-icons";
 
@@ -13,7 +16,9 @@ const SignUpStep4 = () => {
 
     const signUpData = useSelector((state) => state.signup);
     const defaultProfileImg = `${process.env.PUBLIC_URL}/global/images/default.png`;
-    const [profileImg, setProfileImg] = useState(signUpData.profileImg || defaultProfileImg);
+    const [profileImg, setProfileImg] = useState(
+        signUpData.profileImg || defaultProfileImg,
+    );
 
     useEffect(() => {
         console.log("SignUpStep4 signUpData:", signUpData);
@@ -24,7 +29,9 @@ const SignUpStep4 = () => {
 
     // 건너뛰기 클릭 시 store에 기본이미지로 profile 이미지 저장, SignUpStep5 이동
     const handleOnClickSkip = () => {
-        dispatch(updateSignUpData({ profileImg: `images/profile/default.png` }));
+        dispatch(
+            updateSignUpData({ profileImg: `images/profile/default.png` }),
+        );
         navigate("/signUp/5");
     };
 
@@ -65,11 +72,18 @@ const SignUpStep4 = () => {
         <S.Background>
             <S.Wrapper>
                 <S.BackWrapper>
-                    <FontAwesomeIcon icon={faArrowLeft} className="icon" onClick={handleOnClickBack} />
+                    <FontAwesomeIcon
+                        icon={faArrowLeft}
+                        className="icon"
+                        onClick={handleOnClickBack}
+                    />
                 </S.BackWrapper>
                 <S.LogoWrapper>
                     <Link to={"/logIn"} onClick={handleOnClickLogin}>
-                        <img src={`${process.env.PUBLIC_URL}/global/images/logo.png`} alt="logo" />
+                        <img
+                            src={`${process.env.PUBLIC_URL}/global/images/logo.png`}
+                            alt="logo"
+                        />
                     </Link>
                 </S.LogoWrapper>
                 <S.ContentContainer>
@@ -79,22 +93,49 @@ const SignUpStep4 = () => {
                             <S.ProfileWrapper>
                                 <S.ProfileImgWrapper>
                                     {/* 이미지 올리지 않았을 시 기본이미지 */}
-                                    <img src={profileImg || `${process.env.PUBLIC_URL}/global/images/default.png`} alt="profile-img" />
+                                    <img
+                                        src={
+                                            profileImg ||
+                                            `${process.env.PUBLIC_URL}/global/images/default.png`
+                                        }
+                                        alt="profile-img"
+                                    />
                                 </S.ProfileImgWrapper>
-                                <FontAwesomeIcon icon={faCirclePlus} className="icon" />
+                                <FontAwesomeIcon
+                                    icon={faCirclePlus}
+                                    className="icon"
+                                />
                             </S.ProfileWrapper>
                         </label>
-                        <input type="file" id="profile" style={{ display: "none" }} accept=".jpg, .jpeg, .png, .svg" onChange={handleImageChange} />
+                        <input
+                            type="file"
+                            id="profile"
+                            style={{ display: "none" }}
+                            accept=".jpg, .jpeg, .png, .svg"
+                            onChange={handleImageChange}
+                        />
                     </S.LabelCentered>
                 </S.ContentContainer>
                 <S.ButtonContainer>
                     {/* 이미지를 올렸을 시 건너뛰기버튼을 다음버튼으로 대체 */}
                     {profileImg === defaultProfileImg ? (
-                        <OneulButton variant={"indigo"} border={"default"} size={"large"} color={"white"} onClick={handleOnClickSkip}>
+                        <OneulButton
+                            variant={"indigo"}
+                            border={"default"}
+                            size={"large"}
+                            color={"white"}
+                            onClick={handleOnClickSkip}
+                        >
                             건너뛰기
                         </OneulButton>
                     ) : (
-                        <OneulButton variant={"indigo"} border={"default"} size={"large"} color={"white"} onClick={handleOnClickNext}>
+                        <OneulButton
+                            variant={"indigo"}
+                            border={"default"}
+                            size={"large"}
+                            color={"white"}
+                            onClick={handleOnClickNext}
+                        >
                             다음
                         </OneulButton>
                     )}

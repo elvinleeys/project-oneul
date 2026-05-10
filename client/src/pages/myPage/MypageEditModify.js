@@ -7,9 +7,12 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCirclePlus, faCircleXmark } from "@fortawesome/free-solid-svg-icons";
 import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
-import { updateSignUpData, resetSignUpData } from "../../modules/signUp";
+import {
+    updateSignUpData,
+    resetSignUpData,
+} from "../../feature/signup/signUpSlice";
 import useInput from "../../hooks/useInput";
-import { API_URL } from "../../api/Api";
+import { API_URL } from "../../shared/api/apiSlice";
 
 const MypageEditModify = () => {
     const dispatch = useDispatch();
@@ -25,11 +28,16 @@ const MypageEditModify = () => {
 
     const defaultProfileImg = `${process.env.PUBLIC_URL}/global/images/default.png`;
 
-    const [password, setPassword, handlePasswordChange] = useInput(currentUser.password);
-    const [passwordCheck, setPasswordCheck, handlePasswordCheckChange] = useInput("");
+    const [password, setPassword, handlePasswordChange] = useInput(
+        currentUser.password,
+    );
+    const [passwordCheck, setPasswordCheck, handlePasswordCheckChange] =
+        useInput("");
     const [name, setName, handleNameChange] = useInput(currentUser.name);
     const [mobile, setMobile] = useInput(currentUser.mobile);
-    const [nickname, setNickname, handleNicknameChange] = useInput(currentUser.nickname);
+    const [nickname, setNickname, handleNicknameChange] = useInput(
+        currentUser.nickname,
+    );
 
     const [profileImg, setProfileImg] = useState("");
     const [passwordError, setPasswordError] = useState("");
@@ -47,7 +55,9 @@ const MypageEditModify = () => {
         const fetchUserProfileImage = async () => {
             if (currentUser && currentUser.email) {
                 try {
-                    const response = await fetch(`${API_URL}/user/getProfile/${currentUser.email}`);
+                    const response = await fetch(
+                        `${API_URL}/user/getProfile/${currentUser.email}`,
+                    );
                     const data = await response.json();
                     setProfileImg(data.profileImg);
                     console.log(data.profileImg);
@@ -88,10 +98,13 @@ const MypageEditModify = () => {
             formData.append("profileImg", file);
 
             try {
-                const response = await fetch("http://localhost:8000/user/uploadProfileImg", {
-                    method: "POST",
-                    body: formData,
-                });
+                const response = await fetch(
+                    "http://localhost:8000/user/uploadProfileImg",
+                    {
+                        method: "POST",
+                        body: formData,
+                    },
+                );
 
                 if (!response.ok) {
                     const result = await response.json();
@@ -118,10 +131,13 @@ const MypageEditModify = () => {
         const formData = new FormData();
         formData.append("profileImg", blob, "profileImg.png");
 
-        const response = await fetch("http://localhost:8000/user/uploadProfileImg", {
-            method: "POST",
-            body: formData,
-        });
+        const response = await fetch(
+            "http://localhost:8000/user/uploadProfileImg",
+            {
+                method: "POST",
+                body: formData,
+            },
+        );
 
         if (!response.ok) {
             const result = await response.json();
@@ -194,13 +210,16 @@ const MypageEditModify = () => {
 
     const checkMobileDuplicate = async (mobile) => {
         try {
-            const response = await fetch("http://localhost:8000/user/checkMobile", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
+            const response = await fetch(
+                "http://localhost:8000/user/checkMobile",
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({ mobile }),
                 },
-                body: JSON.stringify({ mobile }),
-            });
+            );
             const result = await response.json();
             return result.duplicate;
         } catch (error) {
@@ -237,13 +256,16 @@ const MypageEditModify = () => {
 
     const checkNicknameDuplicate = async (nickname) => {
         try {
-            const response = await fetch("http://localhost:8000/user/checkNickname", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
+            const response = await fetch(
+                "http://localhost:8000/user/checkNickname",
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({ nickname }),
                 },
-                body: JSON.stringify({ nickname }),
-            });
+            );
             const result = await response.json();
             return result.duplicate;
         } catch (error) {
@@ -278,24 +300,33 @@ const MypageEditModify = () => {
             await uploadProfileImg(profileImg);
             console.log("changeProfileImg 확인: ", profileImg);
         }
-        if (isPasswordValid && isPasswordCheckValid && isNameValid && isMobileValid && isNicknameValid) {
+        if (
+            isPasswordValid &&
+            isPasswordCheckValid &&
+            isNameValid &&
+            isMobileValid &&
+            isNicknameValid
+        ) {
             try {
                 console.log(data);
-                const response = await fetch("http://localhost:8000/user/update", {
-                    method: "PUT",
-                    headers: {
-                        "Content-Type": "application/json",
+                const response = await fetch(
+                    "http://localhost:8000/user/update",
+                    {
+                        method: "PUT",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify({
+                            email: currentUser.email,
+                            password: data.password,
+                            mobile: data.mobile,
+                            name: data.name,
+                            nickname: data.nickname,
+                            profileImg: profileImg,
+                            statusMessage: data.statusMessage,
+                        }),
                     },
-                    body: JSON.stringify({
-                        email: currentUser.email,
-                        password: data.password,
-                        mobile: data.mobile,
-                        name: data.name,
-                        nickname: data.nickname,
-                        profileImg: profileImg,
-                        statusMessage: data.statusMessage,
-                    }),
-                });
+                );
                 console.log(response, "response data");
 
                 if (!response.ok) {
@@ -319,18 +350,34 @@ const MypageEditModify = () => {
                 <label htmlFor="profile">
                     <S.ProfileWrapper>
                         <S.ProfileImgWrapper>
-                            <img src={profileImg || `${process.env.PUBLIC_URL}/global/images/default.png`} alt="profile-img" />
+                            <img
+                                src={
+                                    profileImg ||
+                                    `${process.env.PUBLIC_URL}/global/images/default.png`
+                                }
+                                alt="profile-img"
+                            />
                         </S.ProfileImgWrapper>
                         <FontAwesomeIcon icon={faCirclePlus} className="icon" />
                     </S.ProfileWrapper>
                 </label>
-                <input type="file" id="profile" style={{ display: "none" }} accept=".jpg, .jpeg, .png, .svg" onChange={handleImageChange} />
+                <input
+                    type="file"
+                    id="profile"
+                    style={{ display: "none" }}
+                    accept=".jpg, .jpeg, .png, .svg"
+                    onChange={handleImageChange}
+                />
             </S.ProfilePictureWrapper>
             <S.InputContainer>
                 <S.InputWrapper>
                     <S.Label>
                         <p>이메일</p>
-                        <OneulInput name="email" value={currentUser.email} readOnly />
+                        <OneulInput
+                            name="email"
+                            value={currentUser.email}
+                            readOnly
+                        />
                     </S.Label>
                 </S.InputWrapper>
                 <S.InputWrapper>
@@ -350,13 +397,20 @@ const MypageEditModify = () => {
                         <S.ConfirmMessageWrapper>
                             {passwordError === "pattern" && (
                                 <S.ConfirmMessage>
-                                    <FontAwesomeIcon icon={faCircleXmark} className="icon" />
-                                    최소 8자, 하나의 숫자와 특수문자가 필요합니다.
+                                    <FontAwesomeIcon
+                                        icon={faCircleXmark}
+                                        className="icon"
+                                    />
+                                    최소 8자, 하나의 숫자와 특수문자가
+                                    필요합니다.
                                 </S.ConfirmMessage>
                             )}
                             {passwordError === "required" && (
                                 <S.ConfirmMessage>
-                                    <FontAwesomeIcon icon={faCircleXmark} className="icon" />
+                                    <FontAwesomeIcon
+                                        icon={faCircleXmark}
+                                        className="icon"
+                                    />
                                     비밀번호를 입력해주세요.
                                 </S.ConfirmMessage>
                             )}
@@ -378,13 +432,19 @@ const MypageEditModify = () => {
                         <S.ConfirmMessageWrapper>
                             {passwordCheckError === "mismatch" && (
                                 <S.ConfirmMessage>
-                                    <FontAwesomeIcon icon={faCircleXmark} className="icon" />
+                                    <FontAwesomeIcon
+                                        icon={faCircleXmark}
+                                        className="icon"
+                                    />
                                     비밀번호가 일치하지 않습니다.
                                 </S.ConfirmMessage>
                             )}
                             {passwordCheckError === "required" && (
                                 <S.ConfirmMessage>
-                                    <FontAwesomeIcon icon={faCircleXmark} className="icon" />
+                                    <FontAwesomeIcon
+                                        icon={faCircleXmark}
+                                        className="icon"
+                                    />
                                     비밀번호 확인을 입력해주세요.
                                 </S.ConfirmMessage>
                             )}
@@ -404,7 +464,10 @@ const MypageEditModify = () => {
                         <S.ConfirmMessageWrapper>
                             {nameError === "required" && (
                                 <S.ConfirmMessage>
-                                    <FontAwesomeIcon icon={faCircleXmark} className="icon" />
+                                    <FontAwesomeIcon
+                                        icon={faCircleXmark}
+                                        className="icon"
+                                    />
                                     이름을 입력해주세요.
                                 </S.ConfirmMessage>
                             )}
@@ -426,19 +489,28 @@ const MypageEditModify = () => {
                         <S.ConfirmMessageWrapper>
                             {mobileError === "required" && (
                                 <S.ConfirmMessage>
-                                    <FontAwesomeIcon icon={faCircleXmark} className="icon" />
+                                    <FontAwesomeIcon
+                                        icon={faCircleXmark}
+                                        className="icon"
+                                    />
                                     전화번호를 입력해주세요.
                                 </S.ConfirmMessage>
                             )}
                             {mobileError === "invalid" && (
                                 <S.ConfirmMessage>
-                                    <FontAwesomeIcon icon={faCircleXmark} className="icon" />
+                                    <FontAwesomeIcon
+                                        icon={faCircleXmark}
+                                        className="icon"
+                                    />
                                     올바른 전화번호를 입력해주세요.
                                 </S.ConfirmMessage>
                             )}
                             {mobileError === "duplicate" && (
                                 <S.ConfirmMessage>
-                                    <FontAwesomeIcon icon={faCircleXmark} className="icon" />
+                                    <FontAwesomeIcon
+                                        icon={faCircleXmark}
+                                        className="icon"
+                                    />
                                     중복된 전화번호입니다.
                                 </S.ConfirmMessage>
                             )}
@@ -458,13 +530,19 @@ const MypageEditModify = () => {
                         <S.ConfirmMessageWrapper>
                             {nicknameError === "required" && (
                                 <S.ConfirmMessage>
-                                    <FontAwesomeIcon icon={faCircleXmark} className="icon" />
+                                    <FontAwesomeIcon
+                                        icon={faCircleXmark}
+                                        className="icon"
+                                    />
                                     닉네임을 입력해주세요.
                                 </S.ConfirmMessage>
                             )}
                             {nicknameError === "duplicate" && (
                                 <S.ConfirmMessage>
-                                    <FontAwesomeIcon icon={faCircleXmark} className="icon" />
+                                    <FontAwesomeIcon
+                                        icon={faCircleXmark}
+                                        className="icon"
+                                    />
                                     중복된 닉네임입니다.
                                 </S.ConfirmMessage>
                             )}
@@ -479,13 +557,22 @@ const MypageEditModify = () => {
                             name="statusMessage"
                             defaultValue={currentUser.statusMessage}
                             {...register("statusMessage")}
-                            onBlur={(e) => setValue("statusMessage", e.target.value)}
+                            onBlur={(e) =>
+                                setValue("statusMessage", e.target.value)
+                            }
                         />
                     </S.Label>
                 </S.InputWrapper>
             </S.InputContainer>
             <S.buttonWrapper>
-                <OneulButton type="submit" variant="indigo" color="white" size="large" border="default" disabled={isSubmitting}>
+                <OneulButton
+                    type="submit"
+                    variant="indigo"
+                    color="white"
+                    size="large"
+                    border="default"
+                    disabled={isSubmitting}
+                >
                     수정 완료
                 </OneulButton>
             </S.buttonWrapper>

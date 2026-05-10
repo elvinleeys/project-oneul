@@ -1,11 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { faCloudMoon } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCircleXmark, faTrashCan, faPenToSquare } from "@fortawesome/free-regular-svg-icons";
+import {
+    faCircleXmark,
+    faTrashCan,
+    faPenToSquare,
+} from "@fortawesome/free-regular-svg-icons";
 import S from "./style";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import DeleteMyMind from "./DeleteMyMind";
-import { API_URL } from "../../api/Api";
+import { API_URL } from "../../shared/api/apiSlice";
 
 const CheckMyMind = () => {
     const [datas, setDatas] = useState([]);
@@ -19,13 +23,16 @@ const CheckMyMind = () => {
             //쿼리스트링으로 받은 날짜와 일치하는 마음일지 가져오기
             try {
                 const token = localStorage.getItem("token");
-                const response = await fetch(`${API_URL}/myMind/getMyMind?date=${date}`, {
-                    method: "GET",
-                    headers: {
-                        "Content-Type": "application/json",
-                        Authorization: `Bearer ${token}`,
+                const response = await fetch(
+                    `${API_URL}/myMind/getMyMind?date=${date}`,
+                    {
+                        method: "GET",
+                        headers: {
+                            "Content-Type": "application/json",
+                            Authorization: `Bearer ${token}`,
+                        },
                     },
-                });
+                );
                 if (!response.ok) {
                     throw new Error("데이터를 가져오는 데 실패했습니다.");
                 }
@@ -42,7 +49,13 @@ const CheckMyMind = () => {
 
     return (
         <>
-            {visible && <DeleteMyMind visible={visible} setVisible={setVisible} date={date} />}
+            {visible && (
+                <DeleteMyMind
+                    visible={visible}
+                    setVisible={setVisible}
+                    date={date}
+                />
+            )}
             <S.Container>
                 <S.GrayBackground className={visible ? "grayBackground" : ""}>
                     <S.CheckMyMindContainer>
@@ -50,7 +63,11 @@ const CheckMyMind = () => {
                             <FontAwesomeIcon
                                 icon={faPenToSquare}
                                 className="faPenToSquare"
-                                onClick={() => navigate(`/calendar/checkMyMind/modifyMyMind?date=${date}`)}
+                                onClick={() =>
+                                    navigate(
+                                        `/calendar/checkMyMind/modifyMyMind?date=${date}`,
+                                    )
+                                }
                             />
                             <div>
                                 <FontAwesomeIcon
@@ -62,7 +79,10 @@ const CheckMyMind = () => {
                                 />
                             </div>
                             <Link to={"/calendar"}>
-                                <FontAwesomeIcon icon={faCircleXmark} className="faCircleXmark" />
+                                <FontAwesomeIcon
+                                    icon={faCircleXmark}
+                                    className="faCircleXmark"
+                                />
                             </Link>
                         </S.IconsWrapper>
 
@@ -72,7 +92,10 @@ const CheckMyMind = () => {
                         </S.TitleWrapper>
 
                         <S.ContentWrapper>
-                            <FontAwesomeIcon icon={faCloudMoon} className="cloudMoonIcon" />
+                            <FontAwesomeIcon
+                                icon={faCloudMoon}
+                                className="cloudMoonIcon"
+                            />
                             <div>
                                 오늘 내가 느낀 감정
                                 <div className="answer">{datas[0]}</div>
@@ -80,7 +103,10 @@ const CheckMyMind = () => {
                         </S.ContentWrapper>
 
                         <S.ContentWrapper>
-                            <FontAwesomeIcon icon={faCloudMoon} className="cloudMoonIcon" />
+                            <FontAwesomeIcon
+                                icon={faCloudMoon}
+                                className="cloudMoonIcon"
+                            />
                             <div>
                                 감정에 대한 상황
                                 <div className="answer">{datas[1]}</div>
@@ -88,28 +114,43 @@ const CheckMyMind = () => {
                         </S.ContentWrapper>
 
                         <S.ContentWrapper>
-                            <FontAwesomeIcon icon={faCloudMoon} className="cloudMoonIcon" />
+                            <FontAwesomeIcon
+                                icon={faCloudMoon}
+                                className="cloudMoonIcon"
+                            />
                             <div>
-                                내가 바라는 것<div className="answer">{datas[2]}</div>
+                                내가 바라는 것
+                                <div className="answer">{datas[2]}</div>
                             </div>
                         </S.ContentWrapper>
 
                         <S.ContentWrapper>
-                            <FontAwesomeIcon icon={faCloudMoon} className="cloudMoonIcon" />
+                            <FontAwesomeIcon
+                                icon={faCloudMoon}
+                                className="cloudMoonIcon"
+                            />
                             <div>
-                                내가 남에게 듣고 싶은 말<div className="answer">{datas[3]} </div>
+                                내가 남에게 듣고 싶은 말
+                                <div className="answer">{datas[3]} </div>
                             </div>
                         </S.ContentWrapper>
 
                         <S.ContentWrapper>
-                            <FontAwesomeIcon icon={faCloudMoon} className="cloudMoonIcon" />
+                            <FontAwesomeIcon
+                                icon={faCloudMoon}
+                                className="cloudMoonIcon"
+                            />
                             <div>
-                                내가 나에게 해주고 싶은 말<div className="answer">{datas[4]} </div>
+                                내가 나에게 해주고 싶은 말
+                                <div className="answer">{datas[4]} </div>
                             </div>
                         </S.ContentWrapper>
 
                         <S.ContentWrapper>
-                            <FontAwesomeIcon icon={faCloudMoon} className="cloudMoonIcon" />
+                            <FontAwesomeIcon
+                                icon={faCloudMoon}
+                                className="cloudMoonIcon"
+                            />
                             <div>
                                 마음일지를 쓰고 난 후 나의 마음
                                 <div className="answer"> {datas[5]} </div>
