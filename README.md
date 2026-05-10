@@ -63,7 +63,7 @@
 
 #### 라이브러리 / 상태관리
 
-![Redux](https://img.shields.io/badge/Redux-764ABC?style=flat&logo=redux&logoColor=white)
+![Redux-toolkit](https://img.shields.io/badge/Redux-764ABC?style=flat&logo=redux&logoColor=white)
 ![React Hook Form](https://img.shields.io/badge/React_Hook_Form-EC5990?style=flat)
 ![React Router](https://img.shields.io/badge/React_Router-CA4245?style=flat)
 ![Framer Motion](https://img.shields.io/badge/Framer_Motion-0055FF?style=flat)
@@ -118,13 +118,15 @@
 ```bash
 client
 ├─ src
-│  ├─ api          : API URL 변수 보관
-│  ├─ components   : 공용 컴포넌트
+│  ├─ components   : 공용 컴포넌트(Refactoring 전)
+│  ├─ feature      : 관련 기능들(post, comment, reaction)
 │  ├─ global       : global.css 및 theme 설정
 │  ├─ hooks        : 커스텀 hook 함수
 │  ├─ modules      : 모듈 함수 (login, signup 등)
 │  ├─ pages        : 서비스별 페이지 및 layout, error 등
 │  ├─ routes       : React Router 객체
+│  ├─ shared       : 공용 컴포넌트 및 constant 파일
+│  ├─ store        : root Reducer 관리
 │  └─ App.js       : client 진입점
 ```
 
