@@ -107,8 +107,8 @@ const LogIn = () => {
                                     value: emailRegex,
                                 },
                             })}
-                            variant={"active"}
-                            size={"default"}
+                            $variant="active"
+                            $size="default"
                         />
                         <S.ConfirmMessageWrapper>
                             {errors?.email?.type === "pattern" && (
@@ -144,8 +144,8 @@ const LogIn = () => {
                         <p>비밀번호</p>
                         <Input
                             {...register("password", { required: true })}
-                            variant={"active"}
-                            size={"default"}
+                            $variant="active"
+                            $size="default"
                             type="password"
                         />
                         <S.ConfirmMessageWrapper>
@@ -170,10 +170,10 @@ const LogIn = () => {
                         </S.ConfirmMessageWrapper>
                     </S.LoginLabel>
                     <OneulButton
-                        variant={"skyblue"}
-                        border={"default"}
-                        size={"large"}
-                        color={"white"}
+                        $variant="skyblue"
+                        $border="default"
+                        $size="large"
+                        $color="white"
                         disabled={isSubmitting}
                     >
                         로그인
@@ -182,10 +182,10 @@ const LogIn = () => {
                 <S.ToSignUp>
                     <Link to={"/signUp/1"}>
                         <OneulButton
-                            variant={"indigo"}
-                            border={"default"}
-                            size={"large"}
-                            color={"white"}
+                            $variant="indigo"
+                            $border="default"
+                            $size="large"
+                            $color="white"
                         >
                             회원가입
                         </OneulButton>

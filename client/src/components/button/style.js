@@ -11,7 +11,7 @@ const variantCSS = {
         background-color: ${({ theme }) => theme.PALETTE.error["red"]};
     `,
     yellow: css`
-    background-color: ${({ theme }) => theme.PALETTE.error["yellow"]};
+        background-color: ${({ theme }) => theme.PALETTE.error["yellow"]};
     `,
     disabled: css`
         background-color: ${({ theme }) => theme.PALETTE.disabled};
@@ -41,8 +41,8 @@ const borderCSS = {
         border: 2px #ee6161 solid;
     `,
     hoverYellow: css`
-    border: 2px #FFB342 solid;
-`,
+        border: 2px #ffb342 solid;
+    `,
 };
 
 const sizeCSS = {
@@ -79,13 +79,12 @@ const colorCSS = {
 };
 
 const Button = styled.button`
-    ${({ variant }) => variantCSS[variant]}
-    ${({ border }) => borderCSS[border]}
-    ${({ size }) => sizeCSS[size]}
-    ${({ color }) => colorCSS[color]}
+    ${({ $variant }) => variantCSS[$variant]}
+    ${({ $border }) => borderCSS[$border]}
+    ${({ $size }) => sizeCSS[$size]}
+    ${({ $color }) => colorCSS[$color]}
 
     cursor: pointer;
 `;
 
 export default Button;
-

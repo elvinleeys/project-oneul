@@ -108,8 +108,8 @@ const SearchInput = () => {
                     {currentUser.nickname}님, 반가워요!
                 </S.WelcomeMessage>
                 <OneulInput
-                    variant={"active"}
-                    size={"default"}
+                    $variant="active"
+                    $size="default"
                     className={isSearchActive ? "" : "display-none"}
                     value={searchValue}
                     onChange={handleSearchChange}
