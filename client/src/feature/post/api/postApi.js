@@ -1,28 +1,5 @@
 import { apiSlice } from "../../../shared/api/apiSlice";
 
-const endpointMap = {
-    heart: {
-        add: "plusPostHeartReaction",
-        remove: "minusPostHeartReaction",
-    },
-    like: {
-        add: "plusPostLikeReaction",
-        remove: "minusPostLikeReaction",
-    },
-    smile: {
-        add: "plusPostSmileReaction",
-        remove: "minusPostSmileReaction",
-    },
-    sad: {
-        add: "plusPostSadReaction",
-        remove: "minusPostSadReaction",
-    },
-    angry: {
-        add: "plusPostAngryReaction",
-        remove: "minusPostAngryReaction",
-    },
-};
-
 export const postApi = apiSlice.injectEndpoints({
     endpoints: (builder) => ({
         // 게시글 조회
@@ -78,18 +55,15 @@ export const postApi = apiSlice.injectEndpoints({
 
         // Reaction 토글
         toggleReaction: builder.mutation({
-            query: ({ type, reacted, postId, userEmail }) => {
-                const action = reacted ? "remove" : "add";
-
-                return {
-                    url: `/ourToday/${endpointMap[type][action]}`,
-                    method: "PUT",
-                    body: {
-                        id: postId,
-                        userEmail,
-                    },
-                };
-            },
+            query: ({ type, postId, userEmail }) => ({
+                url: "/ourToday/reaction",
+                method: "PUT",
+                body: {
+                    id: postId,
+                    userEmail,
+                    reactionType: type,
+                },
+            }),
 
             async onQueryStarted(
                 { postId, type, reacted, userEmail, tab, email },
