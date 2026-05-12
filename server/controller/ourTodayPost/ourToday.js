@@ -52,7 +52,16 @@ const getOurTodayPost = async (req, res) => {
     try {
         const { email } = req.query;
 
-        const posts = await OurToday.aggregate(buildPostPipeline(email));
+        const pipeline = [
+            ...buildPostPipeline(email),
+            {
+                $sort: {
+                    _id: -1,
+                },
+            },
+        ];
+
+        const posts = await OurToday.aggregate(pipeline);
 
         return res.status(200).json(posts);
     } catch (error) {
@@ -66,7 +75,14 @@ const getMyTodayPost = async (req, res) => {
     try {
         const { email } = req.query;
 
-        const posts = await OurToday.aggregate(buildPostPipeline(email, true));
+        const pipeline = [
+            ...buildPostPipeline(email, true),
+            {
+                $sort: { _id: -1 },
+            },
+        ];
+
+        const posts = await OurToday.aggregate(pipeline);
 
         return res.status(200).json(posts);
     } catch (error) {
@@ -248,7 +264,7 @@ const getOurTodayBestPost = async (req, res) => {
         const pipeline = [
             ...buildPostPipeline(email),
 
-            // 🔥 핵심: heart 기준 정렬을 DB에서 처리
+            // heart 기준 계산
             {
                 $addFields: {
                     heartCount: {
@@ -257,6 +273,7 @@ const getOurTodayBestPost = async (req, res) => {
                 },
             },
 
+            // DB 레벨 정렬 (중요)
             {
                 $sort: {
                     heartCount: -1,
@@ -264,20 +281,30 @@ const getOurTodayBestPost = async (req, res) => {
                 },
             },
 
+            // 1개만
             {
                 $limit: 1,
             },
+
+            // 불필요 필드 제거 (optional)
+            {
+                $project: {
+                    comments: 0,
+                    reactionDocs: 0,
+                    heartCount: 0,
+                },
+            },
         ];
 
-        const bestPost = await OurToday.aggregate(pipeline);
+        const [bestPost] = await OurToday.aggregate(pipeline);
 
-        if (!bestPost.length) {
+        if (!bestPost) {
             return res.status(404).json({
                 message: "게시글이 존재하지 않습니다.",
             });
         }
 
-        return res.status(200).json(bestPost[0]);
+        return res.status(200).json(bestPost);
     } catch (error) {
         return res.status(500).json({
             message: error.message,
