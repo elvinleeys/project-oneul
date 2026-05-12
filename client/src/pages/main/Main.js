@@ -13,6 +13,7 @@ import { useSelector } from "react-redux";
 import PostCard from "../../feature/post/ui/PostCard/PostCard";
 import { API_URL } from "../../shared/api/apiSlice";
 import CommentBS from "../../feature/comment/ui/CommentBS";
+import { useGetBestPostQuery } from "../../feature/post/api/postApi";
 
 const Main = () => {
     const navigate = useNavigate();
@@ -23,7 +24,6 @@ const Main = () => {
 
     const [data, setData] = useState([]);
     const [calendarData, setCalendarData] = useState([]);
-    const [postData, setPostData] = useState(null);
 
     const todayObject = {
         year: new Date().getFullYear(), //오늘 연도
@@ -74,21 +74,9 @@ const Main = () => {
         fetchData();
     }, []);
 
-    useEffect(() => {
-        if (!email) return;
-        const getBestPost = async () => {
-            const response = await fetch(
-                `${API_URL}/ourToday/posts/best?email=${email}`,
-            );
-            if (!response.ok) {
-                throw new Error("API 실패");
-            }
-            const dayBestPost = await response.json();
-            setPostData(dayBestPost);
-        };
-
-        getBestPost();
-    }, [email]);
+    const { data: postData } = useGetBestPostQuery(email, {
+        skip: !email,
+    });
     console.log("dDDd", postData);
 
     return (
