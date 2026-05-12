@@ -15,6 +15,12 @@ export const postApi = apiSlice.injectEndpoints({
             providesTags: ["Post"],
         }),
 
+        // 베스트 게시글 조회
+        getBestPost: builder.query({
+            query: (email) => `/ourToday/posts/best?email=${email}`,
+            providesTags: ["Post"],
+        }),
+
         // 게시글 생성
         createPost: builder.mutation({
             query: (body) => ({
@@ -69,7 +75,8 @@ export const postApi = apiSlice.injectEndpoints({
                 { postId, type, reacted, userEmail, tab, email },
                 { dispatch, queryFulfilled },
             ) {
-                const patchResult = dispatch(
+                // ourToday 목록 캐시 optimistic update
+                const postsPatch = dispatch(
                     postApi.util.updateQueryData(
                         "getPosts",
                         { type: tab, email },
@@ -79,11 +86,30 @@ export const postApi = apiSlice.injectEndpoints({
                             if (!post) return;
 
                             if (reacted) {
-                                post[type] = post[type].filter(
-                                    (user) => user !== userEmail,
-                                );
+                                post.reactions[type].count -= 1;
+                                post.reactions[type].reacted = false;
                             } else {
-                                post[type].push(userEmail);
+                                post.reactions[type].count += 1;
+                                post.reactions[type].reacted = true;
+                            }
+                        },
+                    ),
+                );
+
+                // bestPost 캐시 optimistic update
+                const bestPostPatch = dispatch(
+                    postApi.util.updateQueryData(
+                        "getBestPost",
+                        email,
+                        (draft) => {
+                            if (!draft || draft._id !== postId) return;
+
+                            if (reacted) {
+                                draft.reactions[type].count -= 1;
+                                draft.reactions[type].reacted = false;
+                            } else {
+                                draft.reactions[type].count += 1;
+                                draft.reactions[type].reacted = true;
                             }
                         },
                     ),
@@ -92,7 +118,8 @@ export const postApi = apiSlice.injectEndpoints({
                 try {
                     await queryFulfilled;
                 } catch {
-                    patchResult.undo();
+                    postsPatch.undo();
+                    bestPostPatch.undo();
                 }
             },
         }),
@@ -101,6 +128,7 @@ export const postApi = apiSlice.injectEndpoints({
 
 export const {
     useGetPostsQuery,
+    useGetBestPostQuery,
     useCreatePostMutation,
     useUpdatePostMutation,
     useDeletePostMutation,
