@@ -1,19 +1,26 @@
 import { Schema, model, now } from "mongoose";
 
-
 // post => user.id,
-const ourTodaySchema = new Schema({
-    userEmail : { type: String, ref: 'User'},
-    userProfileImg : String,
-    userNickname : String,
-    content : String,
-    heart : [{type: String}],
-    like : [{type: String}],
-    smile : [{type: String}],
-    sad : [{type: String}],
-    angry : [{ type: String}],
-});
+const ourTodaySchema = new Schema(
+    {
+        userEmail: {
+            type: String,
+            ref: "User",
+            required: true,
+        },
 
+        userProfileImg: String,
+
+        userNickname: String,
+
+        content: {
+            type: String,
+            required: true,
+        },
+    },
+    {
+        timestamps: true,
+    },
+);
 
 export default model("OurToday", ourTodaySchema, "ourToday");
-

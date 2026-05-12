@@ -1,6 +1,8 @@
 import OurToday from "../../models/ourTodaySchema.js";
 import User from "../../models/userSchema.js";
 import Comment from "../../models/ourTodayCommentSchema.js";
+import { buildPostPipeline } from "./postQueryBuilder.js";
+import Reaction from "../../models/reactionSchema.js";
 
 // 게시글 생성을 위한 controller 함수
 const createPostOurToday = async (req, res) => {
@@ -15,11 +17,6 @@ const createPostOurToday = async (req, res) => {
             content: req.body.content,
             userProfileImg: req.body.userProfileImg,
             userNickname: req.body.userNickname,
-            like: req.body.like,
-            heart: req.body.heart,
-            smile: req.body.smile,
-            angry: req.body.angry,
-            sad: req.body.sad,
         };
 
         // 새 게시글 생성
@@ -54,43 +51,10 @@ const createPostOurToday = async (req, res) => {
 const getOurTodayPost = async (req, res) => {
     try {
         const { email } = req.query;
-        // 전체 게시글을 조회하되 id의 내림차순으로 정렬시켜 불러옴
-        // 즉, 최신글 순으로 게시글 정보 데이터를 담는다.
-        const posts = await OurToday.aggregate([
-            {
-                $lookup: {
-                    from: "comment",
-                    localField: "_id",
-                    foreignField: "postId",
-                    as: "comments",
-                },
-            },
-            {
-                $addFields: {
-                    commentCount: { $size: "$comments" },
-                    isMine: {
-                        $eq: ["$userEmail", email],
-                    },
-                },
-            },
-            {
-                $project: {
-                    comments: 0,
-                },
-            },
-            {
-                $sort: { _id: -1 },
-            },
-        ]);
-        // console.log(posts);
-        // 게시글이 존재한다면
-        if (posts) {
-            return res.status(200).json(posts);
-        } else {
-            return res.status(404).json({
-                message: "게시글이 존재하지 않습니다.",
-            });
-        }
+
+        const posts = await OurToday.aggregate(buildPostPipeline(email));
+
+        return res.status(200).json(posts);
     } catch (error) {
         return res.status(500).json({
             message: error.message,
@@ -101,46 +65,10 @@ const getOurTodayPost = async (req, res) => {
 const getMyTodayPost = async (req, res) => {
     try {
         const { email } = req.query;
-        // 전체 게시글을 조회하되 id의 내림차순으로 정렬시켜 불러옴
-        // 즉, 최신글 순으로 게시글 정보 데이터를 담는다.
-        const posts = await OurToday.aggregate([
-            {
-                $match: {
-                    userEmail: email,
-                },
-            },
-            {
-                $lookup: {
-                    from: "comment",
-                    localField: "_id",
-                    foreignField: "postId",
-                    as: "comments",
-                },
-            },
-            {
-                $addFields: {
-                    commentCount: { $size: "$comments" },
-                    isMine: true,
-                },
-            },
-            {
-                $project: {
-                    comments: 0,
-                },
-            },
-            {
-                $sort: { _id: -1 },
-            },
-        ]);
-        // console.log(posts);
-        // 게시글이 존재한다면
-        if (posts) {
-            return res.status(200).json(posts);
-        } else {
-            return res.status(404).json({
-                message: "게시글이 존재하지 않습니다.",
-            });
-        }
+
+        const posts = await OurToday.aggregate(buildPostPipeline(email, true));
+
+        return res.status(200).json(posts);
     } catch (error) {
         return res.status(500).json({
             message: error.message,
@@ -187,7 +115,10 @@ const deleteOurTodayPost = async (req, res) => {
         const deletedPostId = deletedPost._id;
         // console.log("찾은 아이디", deletedPost)
         // 우선 관련 게시글의 댓글을 모두 삭제하고
-        await Comment.deleteMany({ postId: deletedPostId });
+        await Promise.all([
+            Comment.deleteMany({ postId: deletedPostId }),
+            Reaction.deleteMany({ postId: deletedPostId }),
+        ]);
         // console.log("관련 댓글 삭제 완료")
         // 해당 게시글을 삭제한다.
         await OurToday.deleteOne({ _id: deletedPostId });
@@ -197,201 +128,6 @@ const deleteOurTodayPost = async (req, res) => {
         // 에러 발생 시 클라이언트에 에러 응답 전송
         console.error("데이터 삭제 중 에러:", error);
         res.status(500).json({ error: "데이터 삭제에 실패했습니다." });
-    }
-};
-
-// 게시글의 HeartReaction을 클릭했을 시 heart 데이터 정보에 userEmail을 추가할 controller
-const updateOurTodayPostHeartReaction = async (req, res) => {
-    try {
-        const findPost = await OurToday.findOne({ _id: req.body.id }).lean();
-        console.log("Heart 반응 게시글");
-        console.log(findPost);
-        const heartUser = req.body.userEmail;
-        const updateUser = await OurToday.updateOne(
-            { _id: findPost._id },
-            { $push: { heart: heartUser } },
-        );
-        console.log("업데이트 직후");
-        console.log(updateUser);
-        const getPost = await OurToday.findOne({ _id: findPost._id }).lean();
-        console.log(getPost);
-        res.status(200).json(getPost);
-    } catch (error) {
-        console.error("데이터 업데이트 실패:", error);
-        res.status(500).json({ message: "서버 에러가 발생했습니다." });
-    }
-};
-
-// 게시글의 HeartReaction을 클릭했을 시 heart 데이터 정보에 userEmail을 삭제할 controller
-const deleteOurTodayPostHeartReaction = async (req, res) => {
-    try {
-        const findPost = await OurToday.findOne({ _id: req.body.id }).lean();
-        const deleteUser = req.body.userEmail;
-        await OurToday.updateOne(
-            { _id: findPost._id },
-            { $pull: { heart: deleteUser } },
-        );
-        const getPost = await OurToday.findOne({ _id: findPost._id }).lean();
-        res.status(200).json(getPost);
-    } catch (error) {
-        console.error("데이터 업데이트 실패:", error);
-        res.status(500).json({ message: "서버 에러가 발생했습니다." });
-    }
-};
-
-// 게시글의 Like Reaction을 클릭했을 시 Like 데이터 정보에 userEmail을 추가할 controller
-const updateOurTodayPostLikeReaction = async (req, res) => {
-    try {
-        const findPost = await OurToday.findOne({ _id: req.body.id }).lean();
-        console.log("Like 반응 게시글");
-        console.log(findPost);
-        const likeUser = req.body.userEmail;
-        const updateUser = await OurToday.updateOne(
-            { _id: findPost._id },
-            { $push: { like: likeUser } },
-        );
-        console.log("업데이트 직후");
-        console.log(updateUser);
-        const getPost = await OurToday.findOne({ _id: findPost._id }).lean();
-        console.log(getPost);
-        res.status(200).json(getPost);
-    } catch (error) {
-        console.error("데이터 업데이트 실패:", error);
-        res.status(500).json({ message: "서버 에러가 발생했습니다." });
-    }
-};
-
-// 게시글의 Like Reaction을 클릭했을 시 Like 데이터 정보에 userEmail을 삭제할 controller
-const deleteOurTodayPostLikeReaction = async (req, res) => {
-    try {
-        const findPost = await OurToday.findOne({ _id: req.body.id }).lean();
-        const deleteUser = req.body.userEmail;
-        await OurToday.updateOne(
-            { _id: findPost._id },
-            { $pull: { like: deleteUser } },
-        );
-        const getPost = await OurToday.findOne({ _id: findPost._id }).lean();
-        res.status(200).json(getPost);
-    } catch (error) {
-        console.error("데이터 업데이트 실패:", error);
-        res.status(500).json({ message: "서버 에러가 발생했습니다." });
-    }
-};
-
-// 게시글의 Smile Reaction을 클릭했을 시 Smile 데이터 정보에 userEmail을 추가할 controller
-const updateOurTodayPostSmileReaction = async (req, res) => {
-    try {
-        const findPost = await OurToday.findOne({ _id: req.body.id }).lean();
-        console.log("Like 반응 게시글");
-        console.log(findPost);
-        const smileUser = req.body.userEmail;
-        const updateUser = await OurToday.updateOne(
-            { _id: findPost._id },
-            { $push: { smile: smileUser } },
-        );
-        console.log("업데이트 직후");
-        console.log(updateUser);
-        const getPost = await OurToday.findOne({ _id: findPost._id }).lean();
-        console.log(getPost);
-        res.status(200).json(getPost);
-    } catch (error) {
-        console.error("데이터 업데이트 실패:", error);
-        res.status(500).json({ message: "서버 에러가 발생했습니다." });
-    }
-};
-
-// 게시글의 Smile Reaction을 클릭했을 시 Smile 데이터 정보에 userEmail을 삭제할 controller
-const deleteOurTodayPostSmileReaction = async (req, res) => {
-    try {
-        const findPost = await OurToday.findOne({ _id: req.body.id }).lean();
-        const deleteUser = req.body.userEmail;
-        await OurToday.updateOne(
-            { _id: findPost._id },
-            { $pull: { smile: deleteUser } },
-        );
-        const getPost = await OurToday.findOne({ _id: findPost._id }).lean();
-        res.status(200).json(getPost);
-    } catch (error) {
-        console.error("데이터 업데이트 실패:", error);
-        res.status(500).json({ message: "서버 에러가 발생했습니다." });
-    }
-};
-
-// 게시글의 Sad Reaction을 클릭했을 시 Sad 데이터 정보에 userEmail을 추가할 controller
-const updateOurTodayPostSadReaction = async (req, res) => {
-    try {
-        const findPost = await OurToday.findOne({ _id: req.body.id }).lean();
-        console.log("Like 반응 게시글");
-        console.log(findPost);
-        const sadUser = req.body.userEmail;
-        const updateUser = await OurToday.updateOne(
-            { _id: findPost._id },
-            { $push: { sad: sadUser } },
-        );
-        console.log("업데이트 직후");
-        console.log(updateUser);
-        const getPost = await OurToday.findOne({ _id: findPost._id }).lean();
-        console.log(getPost);
-        res.status(200).json(getPost);
-    } catch (error) {
-        console.error("데이터 업데이트 실패:", error);
-        res.status(500).json({ message: "서버 에러가 발생했습니다." });
-    }
-};
-
-// 게시글의 Sad Reaction을 클릭했을 시 Sad 데이터 정보에 userEmail을 삭제할 controller
-const deleteOurTodayPostSadReaction = async (req, res) => {
-    try {
-        const findPost = await OurToday.findOne({ _id: req.body.id }).lean();
-        const deleteUser = req.body.userEmail;
-        await OurToday.updateOne(
-            { _id: findPost._id },
-            { $pull: { sad: deleteUser } },
-        );
-        const getPost = await OurToday.findOne({ _id: findPost._id }).lean();
-        res.status(200).json(getPost);
-    } catch (error) {
-        console.error("데이터 업데이트 실패:", error);
-        res.status(500).json({ message: "서버 에러가 발생했습니다." });
-    }
-};
-
-// 게시글의 Angry Reaction을 클릭했을 시 Angry 데이터 정보에 userEmail을 추가할 controller
-const updateOurTodayPostAngryReaction = async (req, res) => {
-    try {
-        const findPost = await OurToday.findOne({ _id: req.body.id }).lean();
-        console.log("Like 반응 게시글");
-        console.log(findPost);
-        const angryUser = req.body.userEmail;
-        const updateUser = await OurToday.updateOne(
-            { _id: findPost._id },
-            { $push: { angry: angryUser } },
-        );
-        console.log("업데이트 직후");
-        console.log(updateUser);
-        const getPost = await OurToday.findOne({ _id: findPost._id }).lean();
-        console.log(getPost);
-        res.status(200).json(getPost);
-    } catch (error) {
-        console.error("데이터 업데이트 실패:", error);
-        res.status(500).json({ message: "서버 에러가 발생했습니다." });
-    }
-};
-
-// 게시글의 Angry Reaction을 클릭했을 시 Angry 데이터 정보에 userEmail을 삭제할 controller
-const deleteOurTodayPostAngryReaction = async (req, res) => {
-    try {
-        const findPost = await OurToday.findOne({ _id: req.body.id }).lean();
-        const deleteUser = req.body.userEmail;
-        await OurToday.updateOne(
-            { _id: findPost._id },
-            { $pull: { angry: deleteUser } },
-        );
-        const getPost = await OurToday.findOne({ _id: findPost._id }).lean();
-        res.status(200).json(getPost);
-    } catch (error) {
-        console.error("데이터 업데이트 실패:", error);
-        res.status(500).json({ message: "서버 에러가 발생했습니다." });
     }
 };
 
@@ -505,53 +241,47 @@ const deleteOurTodayComment = async (req, res) => {
     }
 };
 
-// 베스트 게시글을 조회할 controller 구성
 const getOurTodayBestPost = async (req, res) => {
     try {
         const { email } = req.query;
 
-        const bestPost = await OurToday.aggregate([
-            // ourToday 형식: 댓글 수, isMine 필드 추가
-            {
-                $lookup: {
-                    from: "comment",
-                    localField: "_id",
-                    foreignField: "postId",
-                    as: "comments",
-                },
-            },
+        const pipeline = [
+            ...buildPostPipeline(email),
+
+            // 🔥 핵심: heart 기준 정렬을 DB에서 처리
             {
                 $addFields: {
-                    commentCount: { $size: "$comments" },
-                    isMine: { $eq: ["$userEmail", email] },
-                    heartLength: { $size: "$heart" }, // 정렬용 임시 필드
+                    heartCount: {
+                        $ifNull: ["$reactions.heart.count", 0],
+                    },
                 },
             },
-            // 기존 getBestPost 정렬 기준 유지
+
             {
                 $sort: {
-                    heartLength: -1,
+                    heartCount: -1,
                     _id: -1,
                 },
             },
-            {
-                $project: {
-                    comments: 0, // 댓글 배열 제거
-                    heartLength: 0, // 정렬용 임시 필드 제거
-                },
-            },
-            { $limit: 1 },
-        ]);
 
-        if (bestPost.length > 0) {
-            return res.status(200).json(bestPost[0]);
-        } else {
-            return res
-                .status(404)
-                .json({ message: "게시글이 존재하지 않습니다." });
+            {
+                $limit: 1,
+            },
+        ];
+
+        const bestPost = await OurToday.aggregate(pipeline);
+
+        if (!bestPost.length) {
+            return res.status(404).json({
+                message: "게시글이 존재하지 않습니다.",
+            });
         }
+
+        return res.status(200).json(bestPost[0]);
     } catch (error) {
-        return res.status(500).json({ message: error.message });
+        return res.status(500).json({
+            message: error.message,
+        });
     }
 };
 
@@ -561,16 +291,6 @@ export {
     getMyTodayPost,
     updateOurTodayPost,
     deleteOurTodayPost,
-    updateOurTodayPostHeartReaction,
-    deleteOurTodayPostHeartReaction,
-    updateOurTodayPostLikeReaction,
-    deleteOurTodayPostLikeReaction,
-    updateOurTodayPostSmileReaction,
-    deleteOurTodayPostSmileReaction,
-    updateOurTodayPostSadReaction,
-    deleteOurTodayPostSadReaction,
-    updateOurTodayPostAngryReaction,
-    deleteOurTodayPostAngryReaction,
     createCommentOurToday,
     getOurTodayComment,
     updateOurTodayComment,
