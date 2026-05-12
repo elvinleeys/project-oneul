@@ -8,7 +8,7 @@ export const useToggleReaction = ({ postId, type, reacted }) => {
     const [toggleReaction, { isLoading }] = useToggleReactionMutation();
 
     const handleToggleReaction = async () => {
-        if (isLoading) return;
+        if (!currentUser?.email || isLoading) return;
 
         try {
             await toggleReaction({
@@ -25,6 +25,7 @@ export const useToggleReaction = ({ postId, type, reacted }) => {
     };
 
     return {
+        isLoading,
         handleToggleReaction,
     };
 };
