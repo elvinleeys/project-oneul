@@ -11,15 +11,10 @@ const reactionTypes = ["heart", "like", "smile", "sad", "angry"];
 const PostCard = ({ post, keyword }) => {
     const currentUser = useSelector((state) => state.login.currentUser);
     const currentUserEmail = currentUser?.email;
-    const profileImg = `${API_URL}/${post.userProfileImg}`;
-
-    // const reactions = useMemo(() => {
-    //     return reactionTypes.map((type) => ({
-    //         type,
-    //         count: post?.[type]?.length ?? 0,
-    //         reacted: post?.[type]?.includes(currentUserEmail),
-    //     }));
-    // }, [post, currentUserEmail]);
+    const profileImg = useMemo(
+        () => `${API_URL}/${post.userProfileImg}`,
+        [post.userProfileImg],
+    );
 
     return (
         <PostContainer>
