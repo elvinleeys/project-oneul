@@ -12,13 +12,23 @@ export const postApi = apiSlice.injectEndpoints({
                 return `/ourToday/posts?email=${email}`;
             },
 
-            providesTags: ["Post"],
+            providesTags: (result) =>
+                result
+                    ? [
+                          ...result.map((post) => ({
+                              type: "Post",
+                              id: post._id,
+                          })),
+                          { type: "Post", id: "LIST" },
+                      ]
+                    : [{ type: "Post", id: "LIST" }],
         }),
 
         // 베스트 게시글 조회
         getBestPost: builder.query({
             query: (email) => `/ourToday/posts/best?email=${email}`,
-            providesTags: ["Post"],
+            providesTags: (result) =>
+                result ? [{ type: "Post", id: result._id }] : [],
         }),
 
         // 게시글 생성
@@ -29,7 +39,7 @@ export const postApi = apiSlice.injectEndpoints({
                 body,
             }),
 
-            invalidatesTags: ["Post"],
+            invalidatesTags: [{ type: "Post", id: "LIST" }],
         }),
 
         // 게시글 수정
@@ -43,7 +53,9 @@ export const postApi = apiSlice.injectEndpoints({
                 },
             }),
 
-            invalidatesTags: ["Post"],
+            invalidatesTags: (_, __, { postId }) => [
+                { type: "Post", id: postId },
+            ],
         }),
 
         // 게시글 삭제
@@ -56,7 +68,7 @@ export const postApi = apiSlice.injectEndpoints({
                 },
             }),
 
-            invalidatesTags: ["Post"],
+            invalidatesTags: [{ type: "Post", id: "LIST" }],
         }),
 
         // Reaction 토글
@@ -70,6 +82,10 @@ export const postApi = apiSlice.injectEndpoints({
                     reactionType: type,
                 },
             }),
+
+            invalidatesTags: (_, __, { postId }) => [
+                { type: "Post", id: postId },
+            ],
 
             async onQueryStarted(
                 { postId, type, reacted, userEmail, tab, email },
@@ -85,13 +101,8 @@ export const postApi = apiSlice.injectEndpoints({
 
                             if (!post) return;
 
-                            if (reacted) {
-                                post.reactions[type].count -= 1;
-                                post.reactions[type].reacted = false;
-                            } else {
-                                post.reactions[type].count += 1;
-                                post.reactions[type].reacted = true;
-                            }
+                            post.reactions[type].count += reacted ? -1 : 1;
+                            post.reactions[type].reacted = !reacted;
                         },
                     ),
                 );
@@ -104,13 +115,8 @@ export const postApi = apiSlice.injectEndpoints({
                         (draft) => {
                             if (!draft || draft._id !== postId) return;
 
-                            if (reacted) {
-                                draft.reactions[type].count -= 1;
-                                draft.reactions[type].reacted = false;
-                            } else {
-                                draft.reactions[type].count += 1;
-                                draft.reactions[type].reacted = true;
-                            }
+                            draft.reactions[type].count += reacted ? -1 : 1;
+                            draft.reactions[type].reacted = !reacted;
                         },
                     ),
                 );
