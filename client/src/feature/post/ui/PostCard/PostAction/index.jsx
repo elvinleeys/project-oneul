@@ -3,18 +3,20 @@ import styled from "styled-components";
 import CommentBtn from "../../CommentBtn";
 import ReactionBtn from "../../../../reaction/ReactionBtn";
 
+const reactionTypes = ["heart", "like", "smile", "sad", "angry"];
+
 const PostAction = ({ postId, reactions, commentCnt, email }) => {
     return (
         <Container>
             <CommentBtn postId={postId} count={commentCnt} email={email} />
             <ReactionWrapper>
-                {reactions.map((reaction) => (
+                {reactionTypes.map((type) => (
                     <ReactionBtn
-                        key={reaction.type}
+                        key={type}
                         postId={postId}
-                        type={reaction.type}
-                        count={reaction.count}
-                        reacted={reaction.reacted}
+                        type={type}
+                        count={reactions?.[type]?.count ?? 0}
+                        reacted={reactions?.[type]?.reacted ?? false}
                     />
                 ))}
             </ReactionWrapper>
