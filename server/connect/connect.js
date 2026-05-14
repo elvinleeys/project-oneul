@@ -15,6 +15,7 @@ const connect = () => {
     mongoose
         .connect(connect_url, { dbName: "oneul" })
         .then(() => {
+            mongoose.set("debug", true);
             console.log("Connected to MongoDB");
         })
         .catch((err) => {

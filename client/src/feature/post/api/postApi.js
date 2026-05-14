@@ -1,28 +1,5 @@
 import { apiSlice } from "../../../shared/api/apiSlice";
 
-const endpointMap = {
-    heart: {
-        add: "plusPostHeartReaction",
-        remove: "minusPostHeartReaction",
-    },
-    like: {
-        add: "plusPostLikeReaction",
-        remove: "minusPostLikeReaction",
-    },
-    smile: {
-        add: "plusPostSmileReaction",
-        remove: "minusPostSmileReaction",
-    },
-    sad: {
-        add: "plusPostSadReaction",
-        remove: "minusPostSadReaction",
-    },
-    angry: {
-        add: "plusPostAngryReaction",
-        remove: "minusPostAngryReaction",
-    },
-};
-
 export const postApi = apiSlice.injectEndpoints({
     endpoints: (builder) => ({
         // 게시글 조회
@@ -35,7 +12,23 @@ export const postApi = apiSlice.injectEndpoints({
                 return `/ourToday/posts?email=${email}`;
             },
 
-            providesTags: ["Post"],
+            providesTags: (result) =>
+                result
+                    ? [
+                          ...result.map((post) => ({
+                              type: "Post",
+                              id: post._id,
+                          })),
+                          { type: "Post", id: "LIST" },
+                      ]
+                    : [{ type: "Post", id: "LIST" }],
+        }),
+
+        // 베스트 게시글 조회
+        getBestPost: builder.query({
+            query: (email) => `/ourToday/posts/best?email=${email}`,
+            providesTags: (result) =>
+                result ? [{ type: "Post", id: result._id }] : [],
         }),
 
         // 게시글 생성
@@ -46,7 +39,7 @@ export const postApi = apiSlice.injectEndpoints({
                 body,
             }),
 
-            invalidatesTags: ["Post"],
+            invalidatesTags: [{ type: "Post", id: "LIST" }],
         }),
 
         // 게시글 수정
@@ -60,7 +53,9 @@ export const postApi = apiSlice.injectEndpoints({
                 },
             }),
 
-            invalidatesTags: ["Post"],
+            invalidatesTags: (_, __, { postId }) => [
+                { type: "Post", id: postId },
+            ],
         }),
 
         // 게시글 삭제
@@ -73,29 +68,31 @@ export const postApi = apiSlice.injectEndpoints({
                 },
             }),
 
-            invalidatesTags: ["Post"],
+            invalidatesTags: [{ type: "Post", id: "LIST" }],
         }),
 
         // Reaction 토글
         toggleReaction: builder.mutation({
-            query: ({ type, reacted, postId, userEmail }) => {
-                const action = reacted ? "remove" : "add";
+            query: ({ type, postId, userEmail }) => ({
+                url: "/ourToday/reaction",
+                method: "PUT",
+                body: {
+                    id: postId,
+                    userEmail,
+                    reactionType: type,
+                },
+            }),
 
-                return {
-                    url: `/ourToday/${endpointMap[type][action]}`,
-                    method: "PUT",
-                    body: {
-                        id: postId,
-                        userEmail,
-                    },
-                };
-            },
+            invalidatesTags: (_, __, { postId }) => [
+                { type: "Post", id: postId },
+            ],
 
             async onQueryStarted(
                 { postId, type, reacted, userEmail, tab, email },
                 { dispatch, queryFulfilled },
             ) {
-                const patchResult = dispatch(
+                // ourToday 목록 캐시 optimistic update
+                const postsPatch = dispatch(
                     postApi.util.updateQueryData(
                         "getPosts",
                         { type: tab, email },
@@ -104,13 +101,22 @@ export const postApi = apiSlice.injectEndpoints({
 
                             if (!post) return;
 
-                            if (reacted) {
-                                post[type] = post[type].filter(
-                                    (user) => user !== userEmail,
-                                );
-                            } else {
-                                post[type].push(userEmail);
-                            }
+                            post.reactions[type].count += reacted ? -1 : 1;
+                            post.reactions[type].reacted = !reacted;
+                        },
+                    ),
+                );
+
+                // bestPost 캐시 optimistic update
+                const bestPostPatch = dispatch(
+                    postApi.util.updateQueryData(
+                        "getBestPost",
+                        email,
+                        (draft) => {
+                            if (!draft || draft._id !== postId) return;
+
+                            draft.reactions[type].count += reacted ? -1 : 1;
+                            draft.reactions[type].reacted = !reacted;
                         },
                     ),
                 );
@@ -118,7 +124,8 @@ export const postApi = apiSlice.injectEndpoints({
                 try {
                     await queryFulfilled;
                 } catch {
-                    patchResult.undo();
+                    postsPatch.undo();
+                    bestPostPatch.undo();
                 }
             },
         }),
@@ -127,6 +134,7 @@ export const postApi = apiSlice.injectEndpoints({
 
 export const {
     useGetPostsQuery,
+    useGetBestPostQuery,
     useCreatePostMutation,
     useUpdatePostMutation,
     useDeletePostMutation,

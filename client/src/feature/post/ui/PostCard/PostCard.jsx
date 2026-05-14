@@ -11,15 +11,10 @@ const reactionTypes = ["heart", "like", "smile", "sad", "angry"];
 const PostCard = ({ post, keyword }) => {
     const currentUser = useSelector((state) => state.login.currentUser);
     const currentUserEmail = currentUser?.email;
-    const profileImg = `${API_URL}/${post.userProfileImg}`;
-
-    const reactions = useMemo(() => {
-        return reactionTypes.map((type) => ({
-            type,
-            count: post?.[type]?.length ?? 0,
-            reacted: post?.[type]?.includes(currentUserEmail),
-        }));
-    }, [post, currentUserEmail]);
+    const profileImg = useMemo(
+        () => `${API_URL}/${post.userProfileImg}`,
+        [post.userProfileImg],
+    );
 
     return (
         <PostContainer>
@@ -33,7 +28,7 @@ const PostCard = ({ post, keyword }) => {
             <PostContent keyword={keyword}>{post.content}</PostContent>
             <PostAction
                 postId={post._id}
-                reactions={reactions}
+                reactions={post.reactions}
                 commentCnt={post.commentCount}
                 email={currentUserEmail}
             />
@@ -50,7 +45,11 @@ export default React.memo(PostCard, (prev, next) => {
         prevPost.content === nextPost.content &&
         prevPost.commentCount === nextPost.commentCount &&
         reactionTypes.every(
-            (type) => prevPost[type]?.length === nextPost[type]?.length,
+            (type) =>
+                prevPost.reactions?.[type]?.count ===
+                    nextPost.reactions?.[type]?.count &&
+                prevPost.reactions?.[type]?.reacted ===
+                    nextPost.reactions?.[type]?.reacted,
         )
     );
 });

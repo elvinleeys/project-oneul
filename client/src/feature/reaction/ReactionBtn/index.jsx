@@ -7,7 +7,7 @@ import { useToggleReaction } from "../model/useToggleReaction";
 const ReactionBtn = ({ postId, type, count, reacted }) => {
     // const [isActive, setIsActive] = useState(reacted);
     // const [cnt, setCnt] = useState(count);
-    const { handleToggleReaction } = useToggleReaction({
+    const { handleToggleReaction, isLoading } = useToggleReaction({
         postId,
         type,
         reacted,
@@ -33,14 +33,21 @@ const ReactionBtn = ({ postId, type, count, reacted }) => {
     // };
 
     return (
-        <Reaction $color={color} onClick={handleToggleReaction}>
+        <Reaction
+            $color={color}
+            onClick={handleToggleReaction}
+            disabled={isLoading}
+        >
             <FontAwesomeIcon icon={icon} className="reaction-icon" />
             <span>{count}</span>
         </Reaction>
     );
 };
 
-export default React.memo(ReactionBtn);
+export default React.memo(
+    ReactionBtn,
+    (prev, next) => prev.count === next.count && prev.reacted === next.reacted,
+);
 
 const Reaction = styled.button`
     height: auto;
